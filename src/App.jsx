@@ -46,6 +46,7 @@ export default function App() {
 
     // ── Lenis smooth scroll ──
     const lenis = new Lenis({ lerp: 0.06 })
+    window.lenis = lenis
     lenis.on('scroll', ScrollTrigger.update)
     gsap.ticker.add(time => lenis.raf(time * 1000))
     gsap.ticker.lagSmoothing(0)
