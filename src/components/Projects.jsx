@@ -15,6 +15,12 @@ export default function Projects() {
         " />
       </svg>
 
+      {/* Title sits in its own full-height block — scrolls away before list sticks */}
+      <div className="projects-title-screen">
+        <h2 className="projects-heading">Projects</h2>
+      </div>
+
+      {/* List scroll area starts only after the title screen */}
       <div className="projects-inner">
         <div className="projects-list" id="projects-list">
           {PROJECTS.map(p => (
