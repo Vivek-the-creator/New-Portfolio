@@ -10,7 +10,7 @@ const storyCards = [
     description: `I'm Vivek, currently pursuing my BE in CSE (Artificial Intelligence and Machine Learning) at Sri Eshwar College of Engineering. I love connecting with new people, sharing positive vibes and keeping life chill while staying focused on what I do.
 
 I'm naturally curious and always ready to learn, improve and explore new ideas. Whether it's day or night, if there's something worth building or working on, I'll probably be awake making it happen. I enjoy paying attention to details, experimenting with different styles and adding a creative touch to everything I create!`,
-    image: '/assets/images/projects/Covers/Portfolio.avif',
+    image: '/assets/images/profile/about_me.png',
     pills: null
   },
   {
@@ -46,7 +46,7 @@ At the same time, storytelling has always been a part of me since childhood. I l
     description: `Ever since childhood, I’ve always been fascinated by exploring new places, experiencing different environments, and finding beauty in unfamiliar moments. For me, travelling isn’t just about visiting locations — it’s about collecting memories, discovering new perspectives, and enjoying the peace that comes with exploring something new.
 
 Even when I travel for hackathons or events, once everything is over, I love spending time exploring the place around me instead of rushing back immediately. Long rides, peaceful walks, random streets and new atmospheres give me a different level of joy, clarity and calmness that I genuinely enjoy more than anything else.`,
-    image: '/assets/images/projects/Covers/Symphony.avif',
+    image: '/assets/images/profile/wanderlust.png',
     pills: ['Exploration', 'New Perspectives', 'Wanderer']
   }
 ]
