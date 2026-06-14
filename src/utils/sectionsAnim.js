@@ -58,13 +58,20 @@ export function setupScrollTimeline(lenis) {
   const zoneTop    = document.getElementById(sections[0].id).getBoundingClientRect().top+scrollY0
   const lastEl     = document.getElementById(sections[sections.length-1].id)
   const zoneBottom = lastEl.getBoundingClientRect().top+lastEl.offsetHeight+scrollY0
-  const zoneH      = zoneBottom-zoneTop
+
+  // Extra scroll distance added by the pinned CardSwap inside #about
+  const PIN_EXTRA = 2000
+  const aboutEl = document.getElementById('about')
+  const aboutPinExtra = aboutEl ? PIN_EXTRA : 0
+
+  const zoneH      = (zoneBottom-zoneTop) + aboutPinExtra
 
   const segEls = []
   sections.forEach(sec => {
     const el=document.getElementById(sec.id)
     sec.top    = el.getBoundingClientRect().top+scrollY0
-    sec.ratio  = el.offsetHeight/zoneH
+    const effectiveH = el.offsetHeight + (sec.id === 'about' ? aboutPinExtra : 0)
+    sec.ratio  = effectiveH/zoneH
     const seg  = document.createElement('div'); seg.className='st-seg'; seg.style.flex=sec.ratio.toFixed(4)
     const fill = document.createElement('div'); fill.className='st-seg-fill'
     seg.appendChild(fill); bar.appendChild(seg)

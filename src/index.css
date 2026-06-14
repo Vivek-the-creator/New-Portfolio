@@ -500,7 +500,7 @@ a.chr-hover { cursor: pointer; }
 
 /* Full-viewport title screen — scrolls completely away before the list sticks */
 .projects-title-screen {
-  height: 100vh;
+  height: 60vh;
   display: flex;
   align-items: flex-end;
   padding: 0 0 10vh 12vw;
@@ -515,6 +515,9 @@ a.chr-hover { cursor: pointer; }
   letter-spacing: -0.03em;
   color: #f0f0f0;
   margin: 0;
+  position: relative;
+  z-index: 30031;
+  transform: translate(-10vw, -26vh);
 }
 .projects-inner {
   position: relative; display: flex; align-items: flex-start; min-height: 100vh;

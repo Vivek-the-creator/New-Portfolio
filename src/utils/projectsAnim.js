@@ -108,13 +108,19 @@ export function setupProjects(lenis, openProjectFn) {
     }
   })
 
-  // fluid line
+  // fluid line — starts when first project centres, ends when last project centres
   const linePath = document.getElementById('fluid-line')
   const lineLen  = linePath.getTotalLength()
   gsap.set(linePath,{strokeDasharray:lineLen,strokeDashoffset:lineLen})
   gsap.to(linePath,{
     strokeDashoffset:0, ease:'none',
-    scrollTrigger:{trigger:'#projects',start:'top 70%',end:'bottom 20%',scrub:1}
+    scrollTrigger:{
+      trigger:'.proj-item:first-child',
+      start:'center center',
+      endTrigger:'.proj-item:last-child',
+      end:'center center',
+      scrub:1
+    }
   })
 
   // circle gallery
