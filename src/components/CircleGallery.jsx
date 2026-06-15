@@ -1,24 +1,30 @@
 import React from 'react'
-import { PROJECTS } from '../data'
+
+const ACHIEVEMENT_IMAGES = Array.from({length: 8}, (_, i) => `/assets/images/achievements/${i + 1}.webp`)
 
 export default function CircleGallery() {
   return (
     <section className="circle-gallery" id="circle-gallery">
       <div className="circle-gallery-pin" id="circle-gallery-pin">
-        {PROJECTS.map((p, i) => (
+        {ACHIEVEMENT_IMAGES.map((src, i) => (
           <img
-            key={p.id}
+            key={i}
             className="cg-img"
-            src={p.cover}
-            alt={p.title}
+            src={src}
+            alt={`Achievement ${i + 1}`}
             width="3000"
             height="2000"
           />
         ))}
+        <div className="cg-caption" id="cg-caption">
+          <p id="cg-caption-text"></p>
+        </div>
         <p className="cg-phrase" id="cg-phrase">
-          Each project is a chance to{' '}
-          <span className="other-accent">learn</span>,{' '}
-          <span className="other-accent">experiment</span> and push my limits.
+          Every event helped me to{' '}
+          <span className="other-accent">learn</span>{' '}
+          something new and{' '}
+          <span className="other-accent">implement</span>{' '}
+          them to reality.
         </p>
       </div>
     </section>

@@ -160,9 +160,22 @@ function setupCircleGallery() {
     img.parentNode.replaceChild(wrapper,img)
   })
 
-  const cgImgs   = gsap.utils.toArray('.cg-img')
-  const cgPhrase = document.getElementById('cg-phrase')
-  const count    = cgImgs.length
+  const cgImgs      = gsap.utils.toArray('.cg-img')
+  const cgPhrase    = document.getElementById('cg-phrase')
+  const cgCaption   = document.getElementById('cg-caption')
+  const cgCaptionTx = document.getElementById('cg-caption-text')
+  const count       = cgImgs.length
+
+  const CAPTIONS = [
+    'Winner at Techgyan GEN AI Hackathon, NIT Trichy',
+    'Winner at Android App Development Hackathon, IIT Madras',
+    "Winner at Appathon '25 - 12 hrs App Development Hackathon, SCT Salem",
+    'Awarded as the youngest team for active involvement & outstanding achievements in High-Level Competitions.',
+    'Finalists of Aventus 3.0 (24-hrs Hackathon), Dayananda Sagar College of Engineering, Bangalore.',
+    'Finalists of Sustain-A-Thon 2025 (UNSDGs Hackathon), Sharda University, Greater Noida, UP.',
+    'Finalists of AI Ignite 2026 (Agentic AI Hackathon), SMVEC Puducherry.',
+    'Finalists Agentica 2.0 (60-hrs Hackathon), IIIT SriCity.',
+  ]
 
   // wrap phrase words
   const walker=document.createTreeWalker(cgPhrase,NodeFilter.SHOW_TEXT)
@@ -178,28 +191,33 @@ function setupCircleGallery() {
   })
   const cgPhraseWords = gsap.utils.toArray('#cg-phrase .word')
 
-  const rx=vw*0.34, rz=500, tiltY=180
+  const rx=vw*0.34, rz=500, tiltY=180, offsetY=-80
   const entryAngle=Math.PI/2, offX=vw*0.85
   const stagger=0.09, totalRange=1+stagger*(count-1)
 
   function getPos(t) {
-    if(t<=0.12){const p=t/0.12;return{x:-offX*(1-p),y:tiltY,z:rz*p,rotY:0}}
+    if(t<=0.12){const p=t/0.12;return{x:-offX*(1-p),y:tiltY+offsetY,z:rz*p,rotY:0}}
     if(t<=0.88){
       const p=(t-0.12)/0.76
       const angle=entryAngle-p*Math.PI*2
-      return{x:Math.cos(angle)*rx,y:(Math.sin(angle)*rz/rz)*tiltY,z:Math.sin(angle)*rz,rotY:p*Math.PI*2}
+      return{x:Math.cos(angle)*rx,y:(Math.sin(angle)*rz/rz)*tiltY+offsetY,z:Math.sin(angle)*rz,rotY:p*Math.PI*2}
     }
     const p=(t-0.88)/0.12
-    return{x:offX*p,y:tiltY,z:rz*(1-p),rotY:Math.PI*2}
+    return{x:offX*p,y:tiltY+offsetY,z:rz*(1-p),rotY:Math.PI*2}
   }
 
   cgImgs.forEach(img=>{ img.style.opacity='0' })
+  gsap.set(cgCaption, {opacity:0})
+  let lastCaptionIdx = -1
 
   ScrollTrigger.create({
     trigger:'#circle-gallery',start:'top top',end:'bottom bottom',
     pin:'#circle-gallery-pin',
     onUpdate(self){
       const progress=self.progress
+      // centreIdx: highest image whose imgT is in [0.13, 0.94] — purely derived, no flags
+      let centreIdx = -1
+
       cgImgs.forEach((img,i)=>{
         const imgT=progress*totalRange-i*stagger
         if(imgT<=0||imgT>=1){img.style.opacity='0';return}
@@ -207,22 +225,38 @@ function setupCircleGallery() {
         if(imgT<0.06)alpha=imgT/0.06; else if(imgT>0.94)alpha=(1-imgT)/0.06
         const pos=getPos(imgT)
         img.style.transform=`translate3d(${pos.x.toFixed(1)}px,${pos.y.toFixed(1)}px,${pos.z.toFixed(1)}px) rotateY(${(pos.rotY*180/Math.PI).toFixed(1)}deg)`
-        img.style.opacity=alpha; img.style.zIndex=Math.round(pos.z+600)
+        img.style.opacity=alpha
+        img.style.zIndex=Math.round(pos.z+600)
+        if(imgT>=0.09 && imgT<0.15) centreIdx=Math.max(centreIdx,i)
       })
-      const ps=0.25,pe=0.75,travelY=200
-      if(progress<ps||progress>pe){cgPhrase.style.opacity='0';return}
+
+      // caption swaps cleanly in both directions
+      if(centreIdx!==lastCaptionIdx){
+        lastCaptionIdx=centreIdx
+        gsap.killTweensOf(cgCaption)
+        if(centreIdx>=0){
+          cgCaptionTx.textContent=CAPTIONS[centreIdx]
+          gsap.fromTo(cgCaption,{opacity:0,y:10},{opacity:1,y:0,duration:0.4,ease:'power2.out'})
+        } else {
+          gsap.to(cgCaption,{opacity:0,duration:0.3,ease:'power2.in'})
+        }
+      }
+
+      // phrase — starts after 8th caption clears (~progress 0.93), runs to end
+      const ps=0.479,pe=0.99,travelY=60
+      if(centreIdx>=0||progress<ps||progress>pe){cgPhrase.style.opacity='0';return}
       const gp=(progress-ps)/(pe-ps)
       cgPhrase.style.transform=`translateY(${(travelY*(0.5-gp)).toFixed(1)}px)`
       cgPhraseWords.forEach((w,wi)=>{
-        const rEnd=0.4
+        const rEnd=0.5
         if(gp<rEnd){
           const revP=gp/rEnd
           const wP=Math.max(0,Math.min(1,(revP*(cgPhraseWords.length+4)-wi)/3))
-          w.style.opacity=wP; w.style.filter=`blur(${(8*(1-wP)).toFixed(1)}px)`
-        } else { w.style.opacity='1'; w.style.filter='blur(0px)' }
+          w.style.opacity=wP;w.style.filter=`blur(${(8*(1-wP)).toFixed(1)}px)`
+        } else {w.style.opacity='1';w.style.filter='blur(0px)'}
       })
       let alpha=1
-      if(gp<0.1)alpha=gp/0.1; else if(gp>0.75)alpha=(1-gp)/0.25
+      if(gp<0.08)alpha=gp/0.08
       cgPhrase.style.opacity=alpha
     }
   })

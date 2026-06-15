@@ -596,6 +596,26 @@ a.chr-hover { cursor: pointer; }
 }
 .cg-phrase .word { display: inline-block; opacity: 0; filter: blur(8px); }
 .cg-phrase .other-accent { font-family: 'other', sans-serif; }
+.cg-caption {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  will-change: opacity;
+  z-index: 901;
+}
+.cg-caption p {
+  font-family: 'Breton', sans-serif;
+  font-size: clamp(0.85rem, 1.4vw, 1.2rem);
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.01em;
+  line-height: 1.5;
+  max-width: 480px;
+  text-shadow: 0 2px 24px rgba(0,0,0,0.8);
+}
 
 /* ── SKILLS ── */
 .skills {
