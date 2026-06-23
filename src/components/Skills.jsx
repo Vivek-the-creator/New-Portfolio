@@ -95,13 +95,13 @@ class SkillsNetwork {
     this.isVisible = true
     this._destroyed = false
     this.nodesInitialized = false
-    this.repulsion = 800
+    this.repulsion = 1400
     this.springLength = 200
-    this.springStrength = 0.05
+    this.springStrength = 0.02
     this.damping = 0.9
-    this.centerPull = 0.003
+    this.centerPull = 0.002
     this.rotationAngle = 0
-    this.rotationSpeed = 0.0000015  // radians per frame — very slow gentle spin
+    this.rotationSpeed = 0.0002  // radians per frame — very slow gentle ambient drift
     this.init()
   }
 
@@ -116,6 +116,13 @@ class SkillsNetwork {
     this.skills.forEach(skill => {
       this.nodes.push({ x: Math.random() * 500, y: Math.random() * 500, vx: 0, vy: 0, radius: 36, label: skill.name, icon: skill.icon, type: skill.type, img: null, loaded: false })
     })
+
+    // Fisher-Yates shuffle to randomly seed nodes across the network
+    for (let i = this.nodes.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [this.nodes[i], this.nodes[j]] = [this.nodes[j], this.nodes[i]]
+    }
+
     this.attemptInit(0)
     this.nodes.forEach(node => {
       const img = new Image()
@@ -124,13 +131,28 @@ class SkillsNetwork {
       img.src = node.icon
       node.img = img
     })
+
+    // Connect same-type nodes in a chain (rather than cliques) to keep them spread out and prevent clumping
+    const nodesByType = {}
+    this.nodes.forEach(node => {
+      if (!nodesByType[node.type]) nodesByType[node.type] = []
+      nodesByType[node.type].push(node)
+    })
+    Object.values(nodesByType).forEach(groupNodes => {
+      for (let i = 0; i < groupNodes.length - 1; i++) {
+        this.connections.push({ a: groupNodes[i], b: groupNodes[i + 1] })
+      }
+    })
+
+    // Add random cross-connections between different types to form a balanced web
     for (let i = 0; i < this.nodes.length; i++) {
       for (let j = i + 1; j < this.nodes.length; j++) {
-        if (this.nodes[i].type === this.nodes[j].type || Math.random() < 0.08) {
+        if (this.nodes[i].type !== this.nodes[j].type && Math.random() < 0.08) {
           this.connections.push({ a: this.nodes[i], b: this.nodes[j] })
         }
       }
     }
+
     this.addInteraction()
     setInterval(() => { if (!this.activeNode && !this.hoverNode && !this._destroyed) this.disturb() }, 4000)
     this.setupVisibilityObserver()
@@ -178,8 +200,8 @@ class SkillsNetwork {
       this.height = newHeight
       this.canvas.width = newWidth
       this.canvas.height = newHeight
-      this.repulsion = this.isMobile ? 300 : 550
-      this.springLength = this.isMobile ? 90 : 130
+      this.repulsion = this.isMobile ? 600 : 1300
+      this.springLength = this.isMobile ? 120 : 180
       this.nodes.forEach(n => { n.radius = this.isMobile ? 22 : 30 })
     }
     return true
@@ -207,19 +229,20 @@ class SkillsNetwork {
     })
     const cx = this.width / 2, cy = this.height / 2
 
-    // Advance the slow rotation angle each frame
-    this.rotationAngle += this.rotationSpeed
-    const cos = Math.cos(this.rotationAngle)
-    const sin = Math.sin(this.rotationAngle)
+    // Rotate the coordinates by a tiny constant step each frame
+    const cos = Math.cos(this.rotationSpeed)
+    const sin = Math.sin(this.rotationSpeed)
 
     this.nodes.forEach(n => {
       if (n === this.activeNode) {
-        // Don't rotate a node the user is dragging
+        // Don't rotate or jitter a node the user is dragging
         n.vx *= this.damping; n.vy *= this.damping
         n.x += n.vx; n.y += n.vy
         return
       }
-      n.vx += (cx - n.x) * this.centerPull; n.vy += (cy - n.y) * this.centerPull
+      // Add gravity pull towards center + very slow random organic drift
+      n.vx += (cx - n.x) * this.centerPull + (Math.random() - 0.5) * 0.05
+      n.vy += (cy - n.y) * this.centerPull + (Math.random() - 0.5) * 0.05
       n.vx *= this.damping; n.vy *= this.damping
       n.x += n.vx; n.y += n.vy
 
@@ -229,8 +252,10 @@ class SkillsNetwork {
       n.y = cy + rx * sin + ry * cos
 
       const m = n.radius
-      if (n.x < m) n.x = m; if (n.x > this.width - m) n.x = this.width - m
-      if (n.y < m) n.y = m; if (n.y > this.height - m) n.y = this.height - m
+      if (n.x < m) { n.x = m; n.vx = Math.abs(n.vx) * 0.5 }
+      if (n.x > this.width - m) { n.x = this.width - m; n.vx = -Math.abs(n.vx) * 0.5 }
+      if (n.y < m) { n.y = m; n.vy = Math.abs(n.vy) * 0.5 }
+      if (n.y > this.height - m) { n.y = this.height - m; n.vy = -Math.abs(n.vy) * 0.5 }
     })
   }
 

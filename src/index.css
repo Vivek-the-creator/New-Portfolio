@@ -627,7 +627,7 @@ a.chr-hover { cursor: pointer; }
   display: flex; align-items: flex-start; min-height: 100vh;
 }
 .skills-left {
-  position: sticky; top: 0; width: 60%; height: 100vh;
+  position: sticky; top: 0; width: 57%; height: 100vh;
   display: flex; flex-direction: column; justify-content: center;
   padding: 8vh 4rem 8vh 8rem; flex-shrink: 0;
 }
@@ -662,7 +662,7 @@ a.chr-hover { cursor: pointer; }
   display: inline-flex; cursor: pointer;
   text-decoration: none; color: inherit; margin-bottom: 3rem;
 }
-.skills-right { width: 40%; padding: 8vh 4rem 8vh 2rem; flex-shrink: 0; overflow-y: auto; max-height: 100vh; scrollbar-gutter: stable; }
+.skills-right { width: 50%; padding: 8vh 4rem 8vh 2rem; flex-shrink: 0; overflow-y: auto; max-height: 100vh; scrollbar-gutter: stable; }
 .skill-group { border-bottom: 1px solid rgba(255,255,255,0.08); }
 .skill-header {
   display: flex; justify-content: space-between; align-items: center;
