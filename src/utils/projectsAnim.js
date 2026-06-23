@@ -244,8 +244,8 @@ function setupCircleGallery() {
 
       // phrase — starts after 8th caption clears (~progress 0.93), runs to end
       const ps=0.479,pe=0.99,travelY=60
-      if(centreIdx>=0||progress<ps||progress>pe){cgPhrase.style.opacity='0';return}
-      const gp=(progress-ps)/(pe-ps)
+      if(centreIdx>=0||progress<ps){cgPhrase.style.opacity='0';return}
+      const gp=Math.min(1,(progress-ps)/(pe-ps))
       cgPhrase.style.transform=`translateY(${(travelY*(0.5-gp)).toFixed(1)}px)`
       cgPhraseWords.forEach((w,wi)=>{
         const rEnd=0.5

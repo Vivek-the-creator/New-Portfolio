@@ -1,44 +1,174 @@
 import gsap from 'gsap'
 import ScrollTrigger from 'gsap/ScrollTrigger'
 
-export function setupSkills() {
-  const groups = document.querySelectorAll('.skill-group')
-  const firstBody = groups[0].querySelector('.skill-body')
-  firstBody.style.height = firstBody.scrollHeight + 'px'
+export function setupSkills(lenis) {
+  const groups   = [...document.querySelectorAll('.skill-group')]
+  const canvas   = document.getElementById('skillsNetwork')
+  const N        = groups.length
+  groups.forEach(g => gsap.set(g.querySelector('.skill-body'), { height: 0 }))
 
-  groups.forEach(group => {
-    group.querySelector('.skill-header').addEventListener('click', () => {
-      if (group.classList.contains('open')) return
-      groups.forEach(g => {
-        if (g.classList.contains('open')) {
-          g.classList.remove('open')
-          gsap.to(g.querySelector('.skill-body'),{height:0,duration:0.45,ease:'power3.inOut'})
-        }
-      })
-      group.classList.add('open')
-      const body = group.querySelector('.skill-body')
-      gsap.to(body,{height:body.scrollHeight,duration:0.45,ease:'power3.inOut',
-        onComplete:()=>ScrollTrigger.refresh()})
+  let isTransitioning = false
+  let currentStep = 0
+
+  function openGroup(idx) {
+    const skillsRight = document.querySelector('.skills-right')
+    groups.forEach((g, i) => {
+      const body = g.querySelector('.skill-body')
+      if (i === idx) {
+        g.classList.add('open')
+        gsap.to(body, {
+          height: body.scrollHeight,
+          duration: 0.45,
+          ease: 'power3.inOut',
+          onComplete: () => {
+            // After expand, scroll the panel so the group header + items are fully visible
+            if (skillsRight) {
+              const containerRect = skillsRight.getBoundingClientRect()
+              const groupRect    = g.getBoundingClientRect()
+              const headerRect   = g.querySelector('.skill-header').getBoundingClientRect()
+
+              // If the bottom of the group is below the container bottom, scroll down
+              const overflowBottom = groupRect.bottom - containerRect.bottom
+              if (overflowBottom > 0) {
+                skillsRight.scrollBy({ top: overflowBottom + 24, behavior: 'smooth' })
+              }
+              // If the header is above the container top (e.g. scrolled past), scroll up to it
+              else if (headerRect.top < containerRect.top) {
+                skillsRight.scrollBy({ top: headerRect.top - containerRect.top - 24, behavior: 'smooth' })
+              }
+            }
+          }
+        })
+        if (canvas?._network) canvas._network.setActiveGroup(g.dataset.group)
+      } else {
+        g.classList.remove('open')
+        gsap.to(body, { height: 0, duration: 0.35, ease: 'power3.inOut' })
+      }
+    })
+  }
+
+  function closeAll() {
+    const skillsRight = document.querySelector('.skills-right')
+    groups.forEach(g => {
+      g.classList.remove('open')
+      gsap.to(g.querySelector('.skill-body'), { height: 0, duration: 0.35, ease: 'power3.inOut' })
+    })
+    if (canvas?._network) canvas._network.setActiveGroup(null)
+    // Reset scroll so panel is fresh for next entry
+    if (skillsRight) skillsRight.scrollTop = 0
+  }
+
+  const stepPx  = 600
+  const totalPx = (N + 1) * stepPx
+  let lastStep  = -1
+
+  // Track whether scroll is in the pinned skills zone
+  let isPinned = false
+
+  const st = ScrollTrigger.create({
+    trigger:    '#skills',
+    start:      'top top',
+    end:        `+=${totalPx}`,
+    pin:        true,
+    pinSpacing: true,
+    onEnter()      { isPinned = true  },
+    onLeave()      { isPinned = false; lenis?.start(); closeAll() },
+    onEnterBack()  { isPinned = true;  openGroup(N - 1) },
+    onLeaveBack()  { isPinned = false; lenis?.start() },
+    onUpdate(self) {
+      if (!isTransitioning) {
+        currentStep = Math.min(N, Math.floor(self.progress * (N + 1)))
+      }
+      const step = Math.min(N, Math.floor(self.progress * (N + 1)))
+      if (step === lastStep) return
+      lastStep = step
+      if (step < N) openGroup(step)
+      else          closeAll()
+    },
+  })
+
+  function goToStep(step) {
+    if (!lenis) return
+    isTransitioning = true
+    currentStep = step
+    const targetScroll = st.start + step * stepPx
+    // Re-enable lenis just for this programmatic scroll, then stop again
+    lenis.start()
+    lenis.scrollTo(targetScroll, {
+      duration: 0.85,
+      ease: (t) => 1 - Math.pow(1 - t, 3),
+      onComplete: () => {
+        isTransitioning = false
+        // Stop lenis again so the next wheel event doesn't drift
+        if (isPinned) lenis.stop()
+      }
+    })
+  }
+
+  // Header click scrolls to the appropriate step
+  groups.forEach((g, i) => {
+    g.querySelector('.skill-header').addEventListener('click', () => {
+      goToStep(i)
     })
   })
 
-  // skills arrow
-  const arrow = document.getElementById('skills-arrow')
-  if (arrow) {
-    gsap.fromTo(arrow,{xPercent:0},{
-      xPercent:100,
-      x:()=>{
-        const left=arrow.parentElement
-        const pad=parseFloat(getComputedStyle(left).paddingLeft)+parseFloat(getComputedStyle(left).paddingRight)
-        return left.clientWidth-pad-arrow.offsetWidth
-      },
-      ease:'none',
-      scrollTrigger:{trigger:'#skills',start:'top top',endTrigger:'#contact',end:'top center',scrub:0.5}
-    })
+  // Use capture:true so this fires BEFORE Lenis's own wheel listener,
+  // allowing us to call e.preventDefault() before Lenis processes the event.
+  const handleWheel = (e) => {
+    if (!isPinned) return
+    e.preventDefault() // always prevent so Lenis never sees this event while pinned
+    if (isTransitioning) return
+
+    const isScrollDown = e.deltaY > 0
+    if (isScrollDown && currentStep < N) {
+      goToStep(currentStep + 1)
+    } else if (!isScrollDown && currentStep > 0) {
+      goToStep(currentStep - 1)
+    } else {
+      // At boundary — let the user exit the section naturally
+      lenis?.start()
+    }
+  }
+
+  let touchStartY = 0
+  const handleTouchStart = (e) => {
+    touchStartY = e.touches[0].clientY
+  }
+
+  const handleTouchMove = (e) => {
+    if (!isPinned) return
+    const touchY = e.touches[0].clientY
+    const deltaY = touchStartY - touchY
+    if (Math.abs(deltaY) < 15 || isTransitioning) return
+    e.preventDefault()
+    const isScrollDown = deltaY > 0
+    if (isScrollDown && currentStep < N) {
+      goToStep(currentStep + 1)
+    } else if (!isScrollDown && currentStep > 0) {
+      goToStep(currentStep - 1)
+    } else {
+      lenis?.start()
+    }
+  }
+
+  // capture:true ensures we intercept before Lenis
+  window.addEventListener('wheel', handleWheel, { passive: false, capture: true })
+  window.addEventListener('touchstart', handleTouchStart, { passive: true })
+  window.addEventListener('touchmove', handleTouchMove, { passive: false, capture: true })
+
+
+  return {
+    pinExtra: totalPx,
+    destroy() {
+      window.removeEventListener('wheel', handleWheel, { capture: true })
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchmove', handleTouchMove, { capture: true })
+      lenis?.start() // ensure lenis is always re-enabled on teardown
+    }
   }
 }
 
-export function setupScrollTimeline(lenis) {
+export function setupScrollTimeline(lenis, skillsPinExtra = 0) {
   const timeline = document.getElementById('scroll-timeline')
   const bar      = document.getElementById('st-bar')
   const label    = document.getElementById('st-label')
@@ -59,19 +189,20 @@ export function setupScrollTimeline(lenis) {
   const lastEl     = document.getElementById(sections[sections.length-1].id)
   const zoneBottom = lastEl.getBoundingClientRect().top+lastEl.offsetHeight+scrollY0
 
-  // Extra scroll distance added by the pinned CardSwap inside #about
   const PIN_EXTRA = 2000
   const aboutEl = document.getElementById('about')
   const aboutPinExtra = aboutEl ? PIN_EXTRA : 0
 
-  const zoneH      = (zoneBottom-zoneTop) + aboutPinExtra
+  const zoneH = (zoneBottom - zoneTop) + aboutPinExtra + skillsPinExtra
 
   const segEls = []
   sections.forEach(sec => {
-    const el=document.getElementById(sec.id)
-    sec.top    = el.getBoundingClientRect().top+scrollY0
-    const effectiveH = el.offsetHeight + (sec.id === 'about' ? aboutPinExtra : 0)
-    sec.ratio  = effectiveH/zoneH
+    const el = document.getElementById(sec.id)
+    sec.top  = el.getBoundingClientRect().top + scrollY0
+    const effectiveH = el.offsetHeight
+      + (sec.id === 'about'  ? aboutPinExtra  : 0)
+      + (sec.id === 'skills' ? skillsPinExtra : 0)
+    sec.ratio = effectiveH / zoneH
     const seg  = document.createElement('div'); seg.className='st-seg'; seg.style.flex=sec.ratio.toFixed(4)
     const fill = document.createElement('div'); fill.className='st-seg-fill'
     seg.appendChild(fill); bar.appendChild(seg)

@@ -86,6 +86,8 @@ export default function App() {
       })
     })
 
+    let destroySkillsFn = null
+
     // ── Preloader ──
     runPreloader({
       startShader,
@@ -98,10 +100,11 @@ export default function App() {
           setupAbout()
           const { openProject } = setupProjectDetail(lenis)
           setupProjects(lenis, openProject)
-          setupSkills()
+          const { pinExtra: skillsPinExtra = 0, destroy: destroySkills } = setupSkills(lenis)
+          destroySkillsFn = destroySkills
           setupAwards()
           setupContact(lenis)
-          setupScrollTimeline(lenis)
+          setupScrollTimeline(lenis, skillsPinExtra)
           setupFooter()
           ScrollTrigger.refresh()
         })
@@ -121,6 +124,7 @@ export default function App() {
     return () => {
       lenis.destroy()
       ScrollTrigger.getAll().forEach(t => t.kill())
+      destroySkillsFn?.()
     }
   }, [])
 

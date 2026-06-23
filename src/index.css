@@ -619,7 +619,7 @@ a.chr-hover { cursor: pointer; }
 
 /* ── SKILLS ── */
 .skills {
-  position: relative; min-height: 100vh; padding-bottom: 30vh;
+  position: relative; min-height: 100vh;
   background: #0a0a0a; z-index: 30010;
 }
 .skills-inner {
@@ -628,8 +628,20 @@ a.chr-hover { cursor: pointer; }
 }
 .skills-left {
   position: sticky; top: 0; width: 60%; height: 100vh;
-  display: flex; flex-direction: column; justify-content: flex-start;
-  padding-top: 15vh; padding-left: 8rem; padding-right: 4rem; flex-shrink: 0;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 8vh 4rem 8vh 8rem; flex-shrink: 0;
+}
+.skills-network-wrap {
+  flex: 1;
+  width: 100%;
+  height: 620px;
+  min-height: 350px;
+  position: relative;
+}
+.skills-network-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .skills-subtitle {
   font-family: 'Breton', sans-serif;
@@ -650,11 +662,7 @@ a.chr-hover { cursor: pointer; }
   display: inline-flex; cursor: pointer;
   text-decoration: none; color: inherit; margin-bottom: 3rem;
 }
-.skills-arrow {
-  font-size: clamp(8rem, 14vw, 12rem); color: #ff1e00;
-  line-height: 1; user-select: none; pointer-events: none; will-change: transform;
-}
-.skills-right { width: 40%; padding: 15vh 4rem 50vh 2rem; flex-shrink: 0; }
+.skills-right { width: 40%; padding: 8vh 4rem 8vh 2rem; flex-shrink: 0; overflow-y: auto; max-height: 100vh; scrollbar-gutter: stable; }
 .skill-group { border-bottom: 1px solid rgba(255,255,255,0.08); }
 .skill-header {
   display: flex; justify-content: space-between; align-items: center;
@@ -692,7 +700,7 @@ a.chr-hover { cursor: pointer; }
 /* ── AWARDS ── */
 .awards {
   position: relative; background: #0a0a0a; z-index: 30010;
-  padding: 0 4rem 15vh; margin-top: -15vh; padding-bottom: 45vh;
+  padding: 15vh 4rem 45vh;
 }
 .awards-title {
   font-size: clamp(2rem, 3vw, 2.4rem) !important;
@@ -1031,7 +1039,6 @@ a.chr-hover { cursor: pointer; }
   .skills-inner { flex-direction: column; }
   .skills-left { position: relative; width: 100%; height: auto; padding: 8vh 1.5rem 3vh; }
   .skills-right { width: 100%; padding: 0 1.5rem 15vh; }
-  .skills-arrow { font-size: clamp(4rem, 20vw, 7rem); }
   .contact-title { font-size: clamp(3.5rem, 15vw, 6rem); top: 15%; left: 50%; width: 100%; text-align: center; transform: translateX(-50%) !important; }
   .contact-frame { display: none !important; }
   .contact-dispo { width: 85%; left: 50% !important; transform: translateX(-50%) !important; text-align: center; }
@@ -1046,7 +1053,7 @@ a.chr-hover { cursor: pointer; }
   .detail-back { top: 1.5rem; left: 1.5rem; }
   .detail-thumbs { width: 18%; }
   .scroll-timeline, .scroll-pct { display: none; }
-  .awards { padding: 0 1.5rem 10vh; }
+  .awards { padding: 10vh 1.5rem 10vh; }
   .award-item { font-size: clamp(0.7rem, 3vw, 1rem); }
   .award-date { display: none; }
   .footer-top { position: absolute; inset: 0; padding: 0; display: block; }

@@ -10,13 +10,11 @@ export const PROJECTS = [
 ]
 
 export const SKILLS = [
-  { group: 'frontend',   label: 'Frontend',          items: ['HTML','CSS','JavaScript','TypeScript','React','Next.js','Tailwind','Bootstrap','Electron'] },
-  { group: 'animation',  label: 'Animation & 3D',    items: ['GSAP','Lenis','Barba.js','Three.js','WebGL','Blender'] },
-  { group: 'backend',    label: 'Backend',            items: ['Node.js','Express.js','Python','Java','PHP','Netlify'] },
-  { group: 'database',   label: 'Databases',          items: ['MySQL','PostgreSQL','MongoDB','Supabase'] },
-  { group: 'devops',     label: 'DevOps & Tools',     items: ['Docker','Vercel','Git','GitHub','GitLab','Cloudflare'] },
-  { group: 'sysadmin',   label: 'System & Security',  items: ['Linux','Bash','Shell','Owasp','Metasploit','Nmap','OpenVAS','Ossec'] },
-  { group: 'design',     label: 'Design',             items: ['Photoshop','Canva','Figma'] },
+  { group: 'frontend',   label: 'Frontend',  items: ['React.js','Flutter','TypeScript','Three.js','Tailwind CSS'] },
+  { group: 'backend',    label: 'Backend',   items: ['Python','Java','Django','Node.js'] },
+  { group: 'sysadmin',   label: 'ML / DL',   items: ['TensorFlow','PyTorch','ScikitLearn','Yolo'] },
+  { group: 'database',   label: 'Databases', items: ['Redis','MySQL','MongoDB','PostgreSQL (Supabase)'] },
+  { group: 'devops',     label: 'Tools',     items: ['Git/GitHub','Canva','Figma','Docker'] },
 ]
 
 export const AWARDS = [

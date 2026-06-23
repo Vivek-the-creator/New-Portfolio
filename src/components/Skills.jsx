@@ -1,6 +1,55 @@
-import React from 'react'
-import ChrHover from './ChrHover'
+import React, { useEffect, useRef } from 'react'
 import { SKILLS } from '../data'
+
+const SKILL_NODES = [
+  { name: 'React.js',    type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+  { name: 'Flutter',     type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg' },
+  { name: 'TypeScript',  type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
+  { name: 'Three.js',    type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg' },
+  { name: 'Tailwind',    type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
+  { name: 'Python',      type: 'backend',  icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
+  { name: 'Java',        type: 'backend',  icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
+  { name: 'Django',      type: 'backend',  icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg' },
+  { name: 'Node.js',     type: 'backend',  icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg' },
+  { name: 'TensorFlow',  type: 'sysadmin', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tensorflow/tensorflow-original.svg' },
+  { name: 'PyTorch',     type: 'sysadmin', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytorch/pytorch-original.svg' },
+  { name: 'ScikitLearn', type: 'sysadmin', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/scikitlearn/scikitlearn-original.svg' },
+  { name: 'YOLO',        type: 'sysadmin', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/opencv/opencv-original.svg' },
+  { name: 'Redis',       type: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/redis/redis-original.svg' },
+  { name: 'MySQL',       type: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
+  { name: 'MongoDB',     type: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
+  { name: 'Supabase',    type: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg' },
+  { name: 'Git',         type: 'devops',   icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
+  { name: 'Canva',       type: 'devops',   icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/canva/canva-original.svg' },
+  { name: 'Figma',       type: 'devops',   icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg' },
+  { name: 'Docker',      type: 'devops',   icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
+]
+
+function SkillsCanvas() {
+  const canvasRef = useRef(null)
+  const networkRef = useRef(null)
+
+  useEffect(() => {
+    let retries = 0
+    const init = () => {
+      const canvas = canvasRef.current
+      if (!canvas) return
+      const parent = canvas.parentElement
+      const hasSize = parent && parent.getBoundingClientRect().width > 0
+      if (hasSize || retries >= 10) {
+        networkRef.current = new SkillsNetwork(canvas, SKILL_NODES)
+        canvas._network = networkRef.current
+      } else {
+        retries++
+        setTimeout(init, 300)
+      }
+    }
+    const t = setTimeout(init, 500)
+    return () => { clearTimeout(t); networkRef.current?.destroy() }
+  }, [])
+
+  return <canvas ref={canvasRef} id="skillsNetwork" className="skills-network-canvas" />
+}
 
 export default function Skills() {
   return (
@@ -8,34 +57,19 @@ export default function Skills() {
       <div className="skills-inner">
         <div className="skills-left">
           <div className="skills-subtitle">Skills</div>
-          <div className="skills-text">
-            Computer Science student in Vannes, specialized in cybersecurity,
-            passionate about web development and design.
-          </div>
-          <div className="skills-separator" />
-          <div>
-            <ChrHover text="Contact me" tag="a" href="#contact" className="skills-contact" />
-          </div>
-          <div className="skills-arrow" id="skills-arrow">
-            <svg style={{ width:'1.25em', height:'1.25em', verticalAlign:'-0.25em' }}
-              viewBox="0 0 84 85" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-              <path d="M11 38H54L37 21H51L73 43L51 65H37L54 48H11Z"/>
-            </svg>
+          <div className="skills-network-wrap">
+            <SkillsCanvas />
           </div>
         </div>
 
         <div className="skills-right" id="skills-right">
-          {SKILLS.map((s, idx) => (
-            <div
-              key={s.group}
-              className={`skill-group${idx === 0 ? ' open' : ''}`}
-              data-group={s.group}
-            >
+          {SKILLS.map((s) => (
+            <div key={s.group} className="skill-group" data-group={s.group}>
               <div className="skill-header">
                 <span className="skill-header-title">{s.label}</span>
                 <span className="skill-header-icon" />
               </div>
-              <div className="skill-body" style={idx === 0 ? undefined : { height: 0 }}>
+              <div className="skill-body" style={{ height: 0 }}>
                 <ul className="skill-body-inner">
                   {s.items.map(item => <li key={item}>{item}</li>)}
                 </ul>
@@ -46,4 +80,218 @@ export default function Skills() {
       </div>
     </section>
   )
+}
+
+class SkillsNetwork {
+  constructor(canvas, skills) {
+    this.canvas = canvas
+    this.ctx = canvas.getContext('2d')
+    this.skills = skills
+    this.nodes = []
+    this.connections = []
+    this.activeNode = null
+    this.hoverNode = null
+    this.activeGroup = null
+    this.isVisible = true
+    this._destroyed = false
+    this.nodesInitialized = false
+    this.repulsion = 800
+    this.springLength = 200
+    this.springStrength = 0.05
+    this.damping = 0.9
+    this.centerPull = 0.003
+    this.rotationAngle = 0
+    this.rotationSpeed = 0.0000015  // radians per frame — very slow gentle spin
+    this.init()
+  }
+
+  setActiveGroup(group) { this.activeGroup = group }
+
+  init() {
+    const parent = this.canvas.parentElement
+    if (parent) {
+      this._ro = new ResizeObserver(() => this.resize())
+      this._ro.observe(parent)
+    }
+    this.skills.forEach(skill => {
+      this.nodes.push({ x: Math.random() * 500, y: Math.random() * 500, vx: 0, vy: 0, radius: 36, label: skill.name, icon: skill.icon, type: skill.type, img: null, loaded: false })
+    })
+    this.attemptInit(0)
+    this.nodes.forEach(node => {
+      const img = new Image()
+      img.crossOrigin = 'Anonymous'
+      img.onload = () => { node.loaded = true }
+      img.src = node.icon
+      node.img = img
+    })
+    for (let i = 0; i < this.nodes.length; i++) {
+      for (let j = i + 1; j < this.nodes.length; j++) {
+        if (this.nodes[i].type === this.nodes[j].type || Math.random() < 0.08) {
+          this.connections.push({ a: this.nodes[i], b: this.nodes[j] })
+        }
+      }
+    }
+    this.addInteraction()
+    setInterval(() => { if (!this.activeNode && !this.hoverNode && !this._destroyed) this.disturb() }, 4000)
+    this.setupVisibilityObserver()
+    this.animate()
+  }
+
+  setupVisibilityObserver() {
+    this._io = new IntersectionObserver(entries => { this.isVisible = entries[0].isIntersecting }, { threshold: 0, rootMargin: '200px' })
+    this._io.observe(this.canvas)
+  }
+
+  attemptInit(attempt) {
+    const ok = this.resize()
+    if (!ok && attempt < 50) {
+      setTimeout(() => this.attemptInit(attempt + 1), 200)
+    } else if (ok && !this.nodesInitialized) {
+      this.nodesInitialized = true
+      this.nodes.forEach(n => { n.x = Math.random() * this.width; n.y = Math.random() * this.height })
+    }
+  }
+
+  disturb() {
+    const angle = Math.random() * Math.PI * 2
+    const force = 2 + Math.random() * 3
+    this.nodes.forEach(n => { n.vx += Math.cos(angle) * force + (Math.random() - 0.5); n.vy += Math.sin(angle) * force + (Math.random() - 0.5) })
+  }
+
+  resize() {
+    this.isMobile = window.innerWidth < 768
+    const parent = this.canvas.parentElement
+    let newWidth = this.width
+    let newHeight = this.height
+    if (parent) {
+      const rect = parent.getBoundingClientRect()
+      newWidth = rect.width || parent.offsetWidth || window.innerWidth
+      newHeight = rect.height || parent.offsetHeight || 0
+    } else {
+      newWidth = window.innerWidth
+      newHeight = this.isMobile ? 300 : 500
+    }
+    if (newWidth === 0 || newHeight === 0) return false
+
+    if (this.canvas.width !== newWidth || this.canvas.height !== newHeight) {
+      this.width = newWidth
+      this.height = newHeight
+      this.canvas.width = newWidth
+      this.canvas.height = newHeight
+      this.repulsion = this.isMobile ? 300 : 550
+      this.springLength = this.isMobile ? 90 : 130
+      this.nodes.forEach(n => { n.radius = this.isMobile ? 22 : 30 })
+    }
+    return true
+  }
+
+  updatePhysics() {
+    for (let i = 0; i < this.nodes.length; i++) {
+      for (let j = i + 1; j < this.nodes.length; j++) {
+        const a = this.nodes[i], b = this.nodes[j]
+        const dx = b.x - a.x, dy = b.y - a.y
+        const distSq = dx * dx + dy * dy
+        if (distSq === 0) continue
+        const dist = Math.sqrt(distSq)
+        const force = this.repulsion * 10 / distSq
+        const fx = (dx / dist) * force, fy = (dy / dist) * force
+        a.vx -= fx; a.vy -= fy; b.vx += fx; b.vy += fy
+      }
+    }
+    this.connections.forEach(c => {
+      const dx = c.b.x - c.a.x, dy = c.b.y - c.a.y
+      const dist = Math.sqrt(dx * dx + dy * dy) || 1
+      const force = (dist - this.springLength) * this.springStrength
+      const fx = (dx / dist) * force, fy = (dy / dist) * force
+      c.a.vx += fx; c.a.vy += fy; c.b.vx -= fx; c.b.vy -= fy
+    })
+    const cx = this.width / 2, cy = this.height / 2
+
+    // Advance the slow rotation angle each frame
+    this.rotationAngle += this.rotationSpeed
+    const cos = Math.cos(this.rotationAngle)
+    const sin = Math.sin(this.rotationAngle)
+
+    this.nodes.forEach(n => {
+      if (n === this.activeNode) {
+        // Don't rotate a node the user is dragging
+        n.vx *= this.damping; n.vy *= this.damping
+        n.x += n.vx; n.y += n.vy
+        return
+      }
+      n.vx += (cx - n.x) * this.centerPull; n.vy += (cy - n.y) * this.centerPull
+      n.vx *= this.damping; n.vy *= this.damping
+      n.x += n.vx; n.y += n.vy
+
+      // Apply orbital rotation around canvas centre
+      const rx = n.x - cx, ry = n.y - cy
+      n.x = cx + rx * cos - ry * sin
+      n.y = cy + rx * sin + ry * cos
+
+      const m = n.radius
+      if (n.x < m) n.x = m; if (n.x > this.width - m) n.x = this.width - m
+      if (n.y < m) n.y = m; if (n.y > this.height - m) n.y = this.height - m
+    })
+  }
+
+  draw() {
+    this.ctx.clearRect(0, 0, this.width, this.height)
+    this.connections.forEach(c => {
+      const sameGroup = this.activeGroup && c.a.type === this.activeGroup && c.b.type === this.activeGroup
+      const hovered = this.hoverNode && (c.a === this.hoverNode || c.b === this.hoverNode)
+      if (sameGroup) {
+        this.ctx.shadowColor = '#ff1e00'; this.ctx.shadowBlur = 8
+        this.ctx.strokeStyle = 'rgba(255,30,0,0.75)'; this.ctx.lineWidth = 2
+      } else {
+        this.ctx.shadowBlur = 0
+        this.ctx.strokeStyle = hovered ? 'rgba(255,255,255,0.35)' : 'rgba(255,255,255,0.08)'
+        this.ctx.lineWidth = 1
+      }
+      this.ctx.beginPath(); this.ctx.moveTo(c.a.x, c.a.y); this.ctx.lineTo(c.b.x, c.b.y)
+      this.ctx.stroke(); this.ctx.shadowBlur = 0
+    })
+    this.nodes.forEach(n => {
+      const isActive = this.activeGroup && n.type === this.activeGroup
+      if (isActive) {
+        this.ctx.beginPath(); this.ctx.arc(n.x, n.y, n.radius + 7, 0, Math.PI * 2)
+        this.ctx.fillStyle = 'rgba(255,30,0,0.12)'; this.ctx.fill()
+      }
+      if (n === this.hoverNode || n === this.activeNode) {
+        this.ctx.beginPath(); this.ctx.arc(n.x, n.y, n.radius + 5, 0, Math.PI * 2)
+        this.ctx.fillStyle = 'rgba(255,255,255,0.08)'; this.ctx.fill()
+      }
+      this.ctx.beginPath(); this.ctx.arc(n.x, n.y, n.radius, 0, Math.PI * 2)
+      this.ctx.fillStyle = '#111'; this.ctx.fill()
+      this.ctx.strokeStyle = isActive ? 'rgba(255,30,0,0.7)' : 'rgba(255,255,255,0.18)'
+      this.ctx.lineWidth = isActive ? 1.5 : 1; this.ctx.stroke()
+      if (n.img && n.loaded && n.img.naturalWidth > 0) {
+        const s = n.radius * 1.15
+        this.ctx.drawImage(n.img, n.x - s / 2, n.y - s / 2, s, s)
+      } else {
+        this.ctx.fillStyle = 'rgba(255,255,255,0.5)'; this.ctx.font = `${n.radius * 0.7}px Arial`
+        this.ctx.textAlign = 'center'; this.ctx.textBaseline = 'middle'
+        this.ctx.fillText(n.label.charAt(0), n.x, n.y)
+      }
+    })
+  }
+
+  animate() {
+    if (this._destroyed) return
+    if (this.width > 0 && this.height > 0 && this.isVisible && !document.hidden) { this.updatePhysics(); this.draw() }
+    requestAnimationFrame(() => this.animate())
+  }
+
+  addInteraction() {
+    const pos = e => { const r = this.canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top } }
+    const nodeAt = (x, y) => this.nodes.find(n => Math.hypot(n.x - x, n.y - y) < n.radius + 10)
+    this.canvas.addEventListener('mousedown', e => { const p = pos(e); this.activeNode = nodeAt(p.x, p.y) })
+    this.canvas.addEventListener('mousemove', e => {
+      const p = pos(e); this.hoverNode = nodeAt(p.x, p.y)
+      this.canvas.style.cursor = this.hoverNode ? 'pointer' : 'default'
+      if (this.activeNode) { this.activeNode.x = p.x; this.activeNode.y = p.y; this.activeNode.vx = 0; this.activeNode.vy = 0 }
+    })
+    window.addEventListener('mouseup', () => { this.activeNode = null })
+  }
+
+  destroy() { this._destroyed = true; this._ro?.disconnect(); this._io?.disconnect() }
 }
