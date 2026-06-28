@@ -571,6 +571,28 @@ a.chr-hover { cursor: pointer; }
 }
 .proj-cursor.active { opacity: 1; }
 
+/* ── SECTION HEADINGS ── */
+.section-heading-huge {
+  font-family: 'Breton', sans-serif;
+  font-size: clamp(3.5rem, 8vw, 7.5rem);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: #f0f0f0;
+  margin: 0;
+}
+.gallery-heading {
+  position: absolute;
+  top: 8vh;
+  left: 8rem;
+  z-index: 30031;
+}
+.skills-heading {
+  font-size: clamp(2rem, 4.5vw, 4.2rem);
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
+}
+
 /* ── CIRCLE GALLERY ── */
 .circle-gallery {
   position: relative; height: 600vh; background: #0a0a0a;
@@ -628,15 +650,16 @@ a.chr-hover { cursor: pointer; }
 }
 .skills-left {
   position: sticky; top: 0; width: 57%; height: 100vh;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 8vh 4rem 8vh 8rem; flex-shrink: 0;
+  display: flex; flex-direction: column; justify-content: flex-start;
+  padding: 5vh 4rem 4vh 4rem; flex-shrink: 0;
 }
 .skills-network-wrap {
   flex: 1;
   width: 100%;
-  height: 620px;
-  min-height: 350px;
+  height: calc(100vh - 14rem);
+  min-height: 300px;
   position: relative;
+  overflow: hidden;
 }
 .skills-network-canvas {
   display: block;
@@ -697,17 +720,17 @@ a.chr-hover { cursor: pointer; }
   line-height: 2.2; color: rgba(255,255,255,0.45);
 }
 
-/* ── AWARDS ── */
-.awards {
+/* ── INTERNSHIPS ── */
+.internships {
   position: relative; background: #0a0a0a; z-index: 30010;
   padding: 15vh 4rem 45vh;
 }
-.awards-title {
+.internships-title {
   font-size: clamp(2rem, 3vw, 2.4rem) !important;
   padding: 0; margin-bottom: 2rem;
 }
-.awards-list { display: flex; flex-direction: column; }
-.award-item {
+.internships-list { display: flex; flex-direction: column; }
+.intern-item {
   position: relative; display: flex; justify-content: space-between;
   align-items: center; padding: 2rem 1rem;
   border-bottom: 1px solid rgba(255,255,255,0.15);
@@ -715,20 +738,20 @@ a.chr-hover { cursor: pointer; }
   font-size: clamp(1rem, 2vw, 1.5rem);
   color: rgba(255,255,255,0.3); transition: color 0.4s ease; cursor: none; z-index: 1;
 }
-.award-item::before {
+.intern-item::before {
   content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   background-color: #ffffff; z-index: -1;
   clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
   transition: clip-path 0.5s cubic-bezier(0.77,0,0.175,1);
 }
-.award-item:first-child { border-top: 1px solid rgba(255,255,255,0.15); }
-.award-item > div { flex: 1; }
-.award-org { text-align: left; }
-.award-site { text-align: center; }
-.award-prize { text-align: center; }
-.award-date { text-align: right; }
-.active-award { color: #000000 !important; }
-.active-award::before { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+.intern-item:first-child { border-top: 1px solid rgba(255,255,255,0.15); }
+.intern-item > div { flex: 1; }
+.intern-company { text-align: left; }
+.intern-role { text-align: center; }
+.intern-duration { text-align: center; }
+.intern-year { text-align: right; }
+.active-intern { color: #000000 !important; }
+.active-intern::before { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
 
 /* ── CONTACT ── */
 .contact { position: relative; min-height: 180vh; z-index: 30015; overflow: hidden; }
@@ -1053,9 +1076,9 @@ a.chr-hover { cursor: pointer; }
   .detail-back { top: 1.5rem; left: 1.5rem; }
   .detail-thumbs { width: 18%; }
   .scroll-timeline, .scroll-pct { display: none; }
-  .awards { padding: 10vh 1.5rem 10vh; }
-  .award-item { font-size: clamp(0.7rem, 3vw, 1rem); }
-  .award-date { display: none; }
+  .internships { padding: 10vh 1.5rem 10vh; }
+  .intern-item { font-size: clamp(0.7rem, 3vw, 1rem); }
+  .intern-year { display: none; }
   .footer-top { position: absolute; inset: 0; padding: 0; display: block; }
   .footer-top-col { position: absolute; width: auto; gap: 0.8rem; }
   .footer-top-col:nth-child(1) { top: 60vh; left: 50%; transform: translateX(-50%); align-items: center; text-align: center; width: 100%; }

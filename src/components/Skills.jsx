@@ -56,7 +56,7 @@ export default function Skills() {
     <section className="skills" id="skills">
       <div className="skills-inner">
         <div className="skills-left">
-          <div className="skills-subtitle">Skills</div>
+          <h2 className="section-heading-huge skills-heading">Skills</h2>
           <div className="skills-network-wrap">
             <SkillsCanvas />
           </div>
@@ -98,7 +98,7 @@ class SkillsNetwork {
     this.repulsion = 1400
     this.springLength = 200
     this.springStrength = 0.02
-    this.damping = 0.9
+    this.damping = 0.85
     this.centerPull = 0.002
     this.rotationAngle = 0
     this.rotationSpeed = 0.0002  // radians per frame — very slow gentle ambient drift
@@ -114,7 +114,7 @@ class SkillsNetwork {
       this._ro.observe(parent)
     }
     this.skills.forEach(skill => {
-      this.nodes.push({ x: Math.random() * 500, y: Math.random() * 500, vx: 0, vy: 0, radius: 36, label: skill.name, icon: skill.icon, type: skill.type, img: null, loaded: false })
+      this.nodes.push({ x: Math.random() * 500, y: Math.random() * 500, vx: 0, vy: 0, radius: 36, label: skill.name, icon: skill.icon, type: skill.type, img: null, loaded: false, wanderAngle: Math.random() * Math.PI * 2 })
     })
 
     // Fisher-Yates shuffle to randomly seed nodes across the network
@@ -240,9 +240,10 @@ class SkillsNetwork {
         n.x += n.vx; n.y += n.vy
         return
       }
-      // Add gravity pull towards center + very slow random organic drift
-      n.vx += (cx - n.x) * this.centerPull + (Math.random() - 0.5) * 0.05
-      n.vy += (cy - n.y) * this.centerPull + (Math.random() - 0.5) * 0.05
+      // Smooth wander: slowly rotate each node's personal drift angle, then push in that direction
+      n.wanderAngle += (Math.random() - 0.5) * 0.25
+      n.vx += (cx - n.x) * this.centerPull + Math.cos(n.wanderAngle) * 0.50
+      n.vy += (cy - n.y) * this.centerPull + Math.sin(n.wanderAngle) * 0.50
       n.vx *= this.damping; n.vy *= this.damping
       n.x += n.vx; n.y += n.vy
 
@@ -251,11 +252,12 @@ class SkillsNetwork {
       n.x = cx + rx * cos - ry * sin
       n.y = cy + rx * sin + ry * cos
 
-      const m = n.radius
-      if (n.x < m) { n.x = m; n.vx = Math.abs(n.vx) * 0.5 }
-      if (n.x > this.width - m) { n.x = this.width - m; n.vx = -Math.abs(n.vx) * 0.5 }
-      if (n.y < m) { n.y = m; n.vy = Math.abs(n.vy) * 0.5 }
-      if (n.y > this.height - m) { n.y = this.height - m; n.vy = -Math.abs(n.vy) * 0.5 }
+      // Clamp AFTER rotation so nodes never escape the canvas
+      const m = n.radius + 2
+      if (n.x < m) { n.x = m; n.vx = Math.abs(n.vx) * 0.4 }
+      if (n.x > this.width - m) { n.x = this.width - m; n.vx = -Math.abs(n.vx) * 0.4 }
+      if (n.y < m) { n.y = m; n.vy = Math.abs(n.vy) * 0.4 }
+      if (n.y > this.height - m) { n.y = this.height - m; n.vy = -Math.abs(n.vy) * 0.4 }
     })
   }
 

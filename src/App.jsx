@@ -10,7 +10,7 @@ import About            from './components/About'
 import Projects         from './components/Projects'
 import CircleGallery    from './components/CircleGallery'
 import Skills           from './components/Skills'
-import Awards           from './components/Awards'
+import Internships      from './components/Internships'
 import Contact          from './components/Contact'
 import Footer           from './components/Footer'
 import ProjectPreview   from './components/ProjectPreview'
@@ -24,7 +24,7 @@ import { setupProjects }      from './utils/projectsAnim'
 import { setupSkills, setupScrollTimeline, setupContact } from './utils/sectionsAnim'
 import { setupFooter }        from './utils/footerAnim'
 import { setupProjectDetail } from './utils/projectDetail'
-import { setupAwards }        from './utils/awardsAnim'
+import { setupInternships }   from './utils/internshipsAnim'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -102,7 +102,7 @@ export default function App() {
           setupProjects(lenis, openProject)
           const { pinExtra: skillsPinExtra = 0, destroy: destroySkills } = setupSkills(lenis)
           destroySkillsFn = destroySkills
-          setupAwards()
+          setupInternships()
           setupContact(lenis)
           setupScrollTimeline(lenis, skillsPinExtra)
           setupFooter()
@@ -141,7 +141,7 @@ export default function App() {
 
       <CircleGallery />
       <Skills />
-      <Awards />
+      <Internships />
       <Contact />
       <Footer />
 

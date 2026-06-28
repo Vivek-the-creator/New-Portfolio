@@ -6,6 +6,7 @@ export default function CircleGallery() {
   return (
     <section className="circle-gallery" id="circle-gallery">
       <div className="circle-gallery-pin" id="circle-gallery-pin">
+        
         {ACHIEVEMENT_IMAGES.map((src, i) => (
           <img
             key={i}

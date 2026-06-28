@@ -17,9 +17,10 @@ export const SKILLS = [
   { group: 'devops',     label: 'Tools',     items: ['Git/GitHub','Canva','Figma','Docker'] },
 ]
 
-export const AWARDS = [
-  { org: 'GSAP',     site: 'lukebaffait.fr', prize: 'Site of the week', date: '17 06 2026', img: '/assets/images/projects/Covers/Portfolio.avif' },
-  { org: 'Awwwards', site: 'lukebaffait.fr', prize: 'Nominee',          date: '26 06 2026', img: '/assets/images/projects/Covers/Portfolio.avif' },
+export const INTERNSHIPS = [
+  { company: 'Cellstrat, Bengaluru', role: 'AI Intern', duration: '1 month', year: 'Jul 2025', img: '/assets/images/internships/cellstrat.jpg' },
+  { company: 'Synapslogic, Coimbatore', role: 'Full Stack Intern', duration: '2 months', year: 'Sep 2025', img: '/assets/images/internships/synapslogic.jpg' },
+  { company: 'NIELIT, Calicut', role: 'Research Intern', duration: '1 month', year: 'Dec 2025', img: '/assets/images/internships/nielit.png' },
 ]
 
 export const ARROW_SVG = `<svg style="width:1.25em;height:1.25em;vertical-align:-0.25em;" viewBox="0 0 84 85" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11 38H54L37 21H51L73 43L51 65H37L54 48H11Z"/></svg>`
