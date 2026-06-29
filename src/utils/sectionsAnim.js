@@ -168,7 +168,7 @@ export function setupSkills(lenis) {
   }
 }
 
-export function setupScrollTimeline(lenis, skillsPinExtra = 0) {
+export function setupScrollTimeline(lenis, skillsPinExtra = 0, certificationsPinExtra = 0) {
   const timeline = document.getElementById('scroll-timeline')
   const bar      = document.getElementById('st-bar')
   const label    = document.getElementById('st-label')
@@ -181,6 +181,7 @@ export function setupScrollTimeline(lenis, skillsPinExtra = 0) {
     {id:'projects',name:'Projects'},
     ...(isMobile?[]:[{id:'circle-gallery',name:'Gallery'}]),
     {id:'skills',name:'Skills'},
+    {id:'certifications',name:'Certificates'},
     {id:'contact',name:'Contact'},
   ].filter(s=>document.getElementById(s.id))
 
@@ -193,7 +194,7 @@ export function setupScrollTimeline(lenis, skillsPinExtra = 0) {
   const aboutEl = document.getElementById('about')
   const aboutPinExtra = aboutEl ? PIN_EXTRA : 0
 
-  const zoneH = (zoneBottom - zoneTop) + aboutPinExtra + skillsPinExtra
+  const zoneH = (zoneBottom - zoneTop) + aboutPinExtra + skillsPinExtra + certificationsPinExtra
 
   const segEls = []
   sections.forEach(sec => {
@@ -202,6 +203,7 @@ export function setupScrollTimeline(lenis, skillsPinExtra = 0) {
     const effectiveH = el.offsetHeight
       + (sec.id === 'about'  ? aboutPinExtra  : 0)
       + (sec.id === 'skills' ? skillsPinExtra : 0)
+      + (sec.id === 'certifications' ? certificationsPinExtra : 0)
     sec.ratio = effectiveH / zoneH
     const seg  = document.createElement('div'); seg.className='st-seg'; seg.style.flex=sec.ratio.toFixed(4)
     const fill = document.createElement('div'); fill.className='st-seg-fill'

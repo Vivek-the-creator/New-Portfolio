@@ -18,9 +18,41 @@ export const SKILLS = [
 ]
 
 export const INTERNSHIPS = [
-  { company: 'Cellstrat, Bengaluru', role: 'AI Intern', duration: '1 month', year: 'Jul 2025', img: '/assets/images/internships/cellstrat.jpg' },
-  { company: 'Synapslogic, Coimbatore', role: 'Full Stack Intern', duration: '2 months', year: 'Sep 2025', img: '/assets/images/internships/synapslogic.jpg' },
-  { company: 'NIELIT, Calicut', role: 'Research Intern', duration: '1 month', year: 'Dec 2025', img: '/assets/images/internships/nielit.png' },
+  { 
+    company: 'Cellstrat, Bengaluru', 
+    role: 'AI Intern', 
+    duration: '1 month', 
+    year: 'Jul 2025', 
+    img: '/assets/images/internships/cellstrat.jpg',
+    experience: 'Assisted in building cutting-edge Generative AI applications and neural networks. Worked on optimizing LLM prompt pipelines, fine-tuning classification models, and integrating custom vision modules. Gained deep understanding of neural architectures, scaling computer vision algorithms, and deploying pipelines on cloud-based AI nodes.'
+  },
+  { 
+    company: 'Synapslogic, Coimbatore', 
+    role: 'Full Stack Intern', 
+    duration: '2 months', 
+    year: 'Sep 2025', 
+    img: '/assets/images/internships/synapslogic.jpg',
+    experience: 'Contributed to building high-traffic client websites and robust server infrastructures using the MERN stack. Designed responsive user interfaces, integrated third-party secure APIs, and developed optimized DB schemas. Authored performance-critical server scripts, reducing dashboard load latencies by 30%.'
+  },
+  { 
+    company: 'NIELIT, Calicut', 
+    role: 'Research Intern', 
+    duration: '1 month', 
+    year: 'Dec 2025', 
+    img: '/assets/images/internships/nielit.png',
+    experience: 'Conducted academic and applied research on edge computing and tinyML implementations for industrial IoT sensor clusters. Built local model inference setups on low-power devices, analyzed latency and accuracy tradeoffs, and documented development guidelines. Collaborated on academic publication manuscripts.'
+  },
+]
+
+export const CERTIFICATIONS = [
+  { title: 'Claude with Google Vertex AI', img: '/assets/images/certifications/Claude with Google Vertex AI.png', issuer: 'Anthropic' },
+  { title: 'DSA Bootcamp', img: '/assets/images/certifications/DSA Bootcamp.png', issuer: 'Unstop' },
+  { title: 'Data Analytics Essentials', img: '/assets/images/certifications/Data Analytics Essentials.png', issuer: 'Cisco Networking Academy' },
+  { title: 'Figma', img: '/assets/images/certifications/Figma.png', issuer: 'Simplilearn' },
+  { title: 'Flutter Development', img: '/assets/images/certifications/Flutter.png', issuer: 'Udemy' },
+  { title: 'Introduction to Modern AI', img: '/assets/images/certifications/Introduction to Modern AI.png', issuer: 'Cisco Networking Academy' },
+  { title: 'MERN Stack Development', img: '/assets/images/certifications/MERN Stack.png', issuer: 'Udemy' },
+  { title: 'RAG with MongoDB', img: '/assets/images/certifications/RAG with MongoDB.png', issuer: 'Credly' },
 ]
 
 export const ARROW_SVG = `<svg style="width:1.25em;height:1.25em;vertical-align:-0.25em;" viewBox="0 0 84 85" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M11 38H54L37 21H51L73 43L51 65H37L54 48H11Z"/></svg>`

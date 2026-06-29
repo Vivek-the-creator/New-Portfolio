@@ -10,6 +10,7 @@ import About            from './components/About'
 import Projects         from './components/Projects'
 import CircleGallery    from './components/CircleGallery'
 import Skills           from './components/Skills'
+import Certifications   from './components/Certifications'
 import Internships      from './components/Internships'
 import Contact          from './components/Contact'
 import Footer           from './components/Footer'
@@ -25,6 +26,7 @@ import { setupSkills, setupScrollTimeline, setupContact } from './utils/sections
 import { setupFooter }        from './utils/footerAnim'
 import { setupProjectDetail } from './utils/projectDetail'
 import { setupInternships }   from './utils/internshipsAnim'
+import { setupCertifications } from './utils/certificationsAnim'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -87,6 +89,7 @@ export default function App() {
     })
 
     let destroySkillsFn = null
+    let destroyCertsFn = null
 
     // ── Preloader ──
     runPreloader({
@@ -102,9 +105,13 @@ export default function App() {
           setupProjects(lenis, openProject)
           const { pinExtra: skillsPinExtra = 0, destroy: destroySkills } = setupSkills(lenis)
           destroySkillsFn = destroySkills
+          
+          const { pinExtra: certsPinExtra = 0, destroy: destroyCerts } = setupCertifications()
+          destroyCertsFn = destroyCerts
+          
           setupInternships()
           setupContact(lenis)
-          setupScrollTimeline(lenis, skillsPinExtra)
+          setupScrollTimeline(lenis, skillsPinExtra, certsPinExtra)
           setupFooter()
           ScrollTrigger.refresh()
         })
@@ -125,6 +132,7 @@ export default function App() {
       lenis.destroy()
       ScrollTrigger.getAll().forEach(t => t.kill())
       destroySkillsFn?.()
+      destroyCertsFn?.()
     }
   }, [])
 
@@ -141,6 +149,7 @@ export default function App() {
 
       <CircleGallery />
       <Skills />
+      <Certifications />
       <Internships />
       <Contact />
       <Footer />
