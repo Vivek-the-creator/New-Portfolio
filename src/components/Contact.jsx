@@ -15,10 +15,7 @@ export default function Contact() {
 
           <div className="contact-dispo" id="contact-dispo">
             <p>
-              Looking for an{' '}
-              <span className="other-accent">apprenticeship</span> starting
-              September. Eager to join an innovative team and contribute to
-              ambitious projects.
+              
             </p>
           </div>
 
@@ -31,11 +28,7 @@ export default function Contact() {
 
           <div className="contact-dispo" id="contact-dispo-2">
             <p>
-              I'm available for
-              <span className="other-accent"> freelance missions worldwide</span>,
-              on
-              <span className="other-accent"> your ambitious projects</span> and
-              international collaborations.
+              
             </p>
           </div>
 
