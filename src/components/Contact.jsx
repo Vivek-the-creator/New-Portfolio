@@ -48,12 +48,11 @@ export default function Contact() {
 
           <div className="contact-bottom" id="contact-bottom">
             <nav className="contact-socials" id="contact-socials" aria-label="Social networks">
-              <ChrHover text="GitHub"   tag="a" href="https://github.com/SkyNigh1"               target="_blank" rel="noopener noreferrer" />
-              <ChrHover text="LinkedIn" tag="a" href="https://www.linkedin.com/in/luke-baffait/" target="_blank" rel="noopener noreferrer" />
-              <ChrHover text="Behance"  tag="a" href="https://www.behance.net/lukebaffait"       target="_blank" rel="noopener noreferrer" />
+              <ChrHover text="GitHub"   tag="a" href="https://github.com/Vivek-the-creator"               target="_blank" rel="noopener noreferrer" />
+              <ChrHover text="LinkedIn" tag="a" href="https://www.linkedin.com/in/vivek-k-k/" target="_blank" rel="noopener noreferrer" />
             </nav>
-            <a className="contact-mail" id="contact-mail" href="mailto:luke.baffait@yahoo.com">
-              luke.baffait@yahoo.com
+            <a className="contact-mail" id="contact-mail" href="mailto:kevivark0789@gmail.com">
+              kevivark0789@gmail.com
             </a>
           </div>
         </div>

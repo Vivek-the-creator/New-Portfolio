@@ -921,7 +921,7 @@ a.chr-hover { cursor: pointer; }
 /* ── INTERNSHIPS ── */
 .internships {
   position: relative; background: #0a0a0a; z-index: 30010;
-  padding: 15vh 4rem 45vh;
+  padding: 15vh 4rem 10vh;
 }
 .internships-title {
   padding: 0; margin-bottom: 3rem;
@@ -1122,7 +1122,7 @@ a.chr-hover { cursor: pointer; }
 .contact-pin { position: sticky; top: 0; height: 100vh; z-index: 20006; }
 .contact-bg {
   position: fixed; inset: 0; background: #0a0a0a;
-  z-index: 5; pointer-events: none; display: none;
+  z-index: 10003; pointer-events: none; display: none;
 }
 .contact-blob-wrap {
   position: fixed; bottom: 0; left: 0; right: 0; height: 0;

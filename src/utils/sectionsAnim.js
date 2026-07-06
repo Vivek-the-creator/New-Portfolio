@@ -269,6 +269,7 @@ export function setupContact(lenis) {
   const tl = gsap.timeline({
     scrollTrigger:{trigger:'#contact',start:'top bottom',end:'bottom bottom',scrub:true}
   })
+  gsap.set(blob,{transformOrigin:'50% 100%'})
   tl.fromTo(blob,{scale:0},{scale:1,duration:0.6,ease:'none'},0)
   tl.to([stTimeline,pctEl],{opacity:0,duration:0.08},0.1)
   gsap.set(title,{yPercent:0,x:()=>window.innerWidth*1.1})
