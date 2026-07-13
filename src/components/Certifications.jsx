@@ -1,8 +1,67 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { CERTIFICATIONS } from '../data'
 
 export default function Certifications() {
   const [activeCert, setActiveCert] = useState(null)
+
+  useEffect(() => {
+    let pointerStart = null
+
+    const getCertAtPoint = (x, y) => {
+      const cards = document.querySelectorAll('.cert-card')
+
+      for (const card of cards) {
+        const rect = card.getBoundingClientRect()
+        const isInside =
+          x >= rect.left &&
+          x <= rect.right &&
+          y >= rect.top &&
+          y <= rect.bottom
+
+        if (isInside) {
+          return CERTIFICATIONS[Number(card.dataset.certIndex)]
+        }
+      }
+
+      return null
+    }
+
+    const handlePointerDown = (e) => {
+      pointerStart = { x: e.clientX, y: e.clientY }
+    }
+
+    const handlePointerUp = (e) => {
+      if (activeCert || !pointerStart) return
+
+      const section = document.getElementById('certifications')
+      const sectionRect = section?.getBoundingClientRect()
+      const isInSection =
+        sectionRect &&
+        e.clientX >= sectionRect.left &&
+        e.clientX <= sectionRect.right &&
+        e.clientY >= sectionRect.top &&
+        e.clientY <= sectionRect.bottom
+
+      if (!isInSection) return
+
+      const moved = Math.hypot(e.clientX - pointerStart.x, e.clientY - pointerStart.y)
+      if (moved > 8) return
+
+      const cert = getCertAtPoint(e.clientX, e.clientY)
+      if (cert) {
+        e.preventDefault()
+        setActiveCert(cert)
+      }
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown, true)
+    window.addEventListener('pointerup', handlePointerUp, true)
+
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown, true)
+      window.removeEventListener('pointerup', handlePointerUp, true)
+    }
+  }, [activeCert])
 
   // Handle escape key to close modal
   useEffect(() => {
@@ -27,6 +86,7 @@ export default function Certifications() {
               <div 
                 className="cert-card" 
                 key={index}
+                data-cert-index={index}
                 onClick={() => setActiveCert(cert)}
               >
                 <div className="cert-img-wrap">

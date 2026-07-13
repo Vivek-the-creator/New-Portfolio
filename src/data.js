@@ -24,7 +24,7 @@ export const INTERNSHIPS = [
     duration: '1 month', 
     year: 'Jul 2025', 
     img: '/assets/images/internships/cellstrat.jpg',
-    experience: 'Assisted in building cutting-edge Generative AI applications and neural networks. Worked on optimizing LLM prompt pipelines, fine-tuning classification models, and integrating custom vision modules. Gained deep understanding of neural architectures, scaling computer vision algorithms, and deploying pipelines on cloud-based AI nodes.'
+    experience: 'Worked on developing AI models for healthcare applications by implementing CNN-LSTM architectures for ECG abnormality detection from ECG reports / csv files and OCR-NLP pipelines for medical report summarization. Gained practical experience in deep learning, medical image analysis, natural language processing, and AI-driven healthcare solutions.'
   },
   { 
     company: 'Synapslogic, Coimbatore', 
@@ -32,7 +32,7 @@ export const INTERNSHIPS = [
     duration: '2 months', 
     year: 'Sep 2025', 
     img: '/assets/images/internships/synapslogic.jpg',
-    experience: 'Contributed to building high-traffic client websites and robust server infrastructures using the MERN stack. Designed responsive user interfaces, integrated third-party secure APIs, and developed optimized DB schemas. Authored performance-critical server scripts, reducing dashboard load latencies by 30%.'
+    experience: 'Contributed to the development of a confidential enterprise web application under a Non-Disclosure Agreement (NDA). Designed responsive frontend interfaces, integrated frontend components with backend APIs, and collaborated with the development team to deliver scalable, user-centric solutions.'
   },
   { 
     company: 'NIELIT, Calicut', 
@@ -40,7 +40,7 @@ export const INTERNSHIPS = [
     duration: '1 month', 
     year: 'Dec 2025', 
     img: '/assets/images/internships/nielit.png',
-    experience: 'Conducted academic and applied research on edge computing and tinyML implementations for industrial IoT sensor clusters. Built local model inference setups on low-power devices, analyzed latency and accuracy tradeoffs, and documented development guidelines. Collaborated on academic publication manuscripts.'
+    experience: 'Contributed to AI and computer vision research by developing Django-based applications and implementing YOLO models for object detection. Collaborated on building a pothole detection system, gaining hands-on experience in deep learning, image processing, and deploying AI-driven solutions.'
   },
 ]
 

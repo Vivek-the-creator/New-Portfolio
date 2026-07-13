@@ -5,7 +5,7 @@ const SKILL_NODES = [
   { name: 'React.js',    type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
   { name: 'Flutter',     type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg' },
   { name: 'TypeScript',  type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg' },
-  { name: 'Three.js',    type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/threejs/threejs-original.svg' },
+  { name: 'Three.js',    type: 'frontend', icon: 'https://cdn.simpleicons.org/threedotjs/ffffff' },
   { name: 'Tailwind',    type: 'frontend', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' },
   { name: 'Python',      type: 'backend',  icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
   { name: 'Java',        type: 'backend',  icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg' },
@@ -20,7 +20,7 @@ const SKILL_NODES = [
   { name: 'MongoDB',     type: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
   { name: 'Supabase',    type: 'database', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/supabase/supabase-original.svg' },
   { name: 'Git',         type: 'devops',   icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },
-  { name: 'Canva',       type: 'devops',   icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/canva/canva-original.svg' },
+  { name: 'Canva',       type: 'devops',   icon: 'https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/canva/default.svg' },
   { name: 'Figma',       type: 'devops',   icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg' },
   { name: 'Docker',      type: 'devops',   icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg' },
 ]

@@ -96,10 +96,10 @@ export function setupFooter() {
   const leftWrap  = document.querySelector('.footer-ascii.left')
   const rightWrap = document.querySelector('.footer-ascii.right')
   if (leftWrap) {
-    gsap.fromTo(leftWrap, {xPercent:-100},{xPercent:0,ease:'none',scrollTrigger:{trigger:'#footer-transition',start:'top bottom+=500',end:'bottom bottom',scrub:true}})
+    gsap.fromTo(leftWrap, {xPercent:-100},{xPercent:0,ease:'none',scrollTrigger:{trigger:'#footer-transition',start:'top bottom',end:'bottom bottom',scrub:true}})
   }
   if (rightWrap) {
-    gsap.fromTo(rightWrap,{xPercent:100},{xPercent:0,ease:'none',scrollTrigger:{trigger:'#footer-transition',start:'top bottom+=500',end:'bottom bottom',scrub:true}})
+    gsap.fromTo(rightWrap,{xPercent:100},{xPercent:0,ease:'none',scrollTrigger:{trigger:'#footer-transition',start:'top bottom',end:'bottom bottom',scrub:true}})
   }
 
   // mouse parallax
@@ -114,21 +114,12 @@ export function setupFooter() {
     requestAnimationFrame(parallaxLoop)
   }
   ScrollTrigger.create({
-    trigger:'#footer-transition', start:'top bottom+=500', end:'bottom bottom',
+    trigger:'#footer-transition', start:'top bottom', end:'bottom bottom',
     onEnter:()=>{footerVisible=true;parallaxLoop()},
     onEnterBack:()=>{footerVisible=true;parallaxLoop()},
     onLeaveBack:()=>{footerVisible=false},
   })
 
-  // footer top chars
-  const footerTopChars=document.querySelectorAll('#footer .footer-top .chr-hover .ch-top')
-  if(footerTopChars.length){
-    gsap.set(footerTopChars,{clipPath:'inset(100% 0 0 0)'})
-    gsap.to(footerTopChars,{
-      clipPath:'inset(0 0 0 0)', ease:'power3.out', stagger:{each:0.015,from:'start'},
-      scrollTrigger:{trigger:'#footer-transition',start:'center bottom+=500',end:'bottom bottom',scrub:true}
-    })
-  }
 
   // footer name chars animation
   function rebuildChars(el, keepFirst) {
@@ -149,18 +140,19 @@ export function setupFooter() {
   if(vivekEl&&karthikeyanEl){
     const vivekChars   = rebuildChars(vivekEl,true)
     const karthikeyanChars= rebuildChars(karthikeyanEl,false)
+    const dotEl       = document.querySelector('.footer-name-dot')
     const dotChars    = dotEl?rebuildChars(dotEl,false):[]
-    const lukeRev     = lukeChars.slice().reverse()
-    const rightSide   = baffaitChars.concat(dotChars)
+    const vivekRev     = vivekChars.slice().reverse()
+    const rightSide   = karthikeyanChars.concat(dotChars)
     const ordered=[]
-    for(let i=0;i<Math.max(lukeRev.length,rightSide.length);i++){
+    for(let i=0;i<Math.max(vivekRev.length,rightSide.length);i++){
       if(rightSide[i]) ordered.push(rightSide[i])
-      if(lukeRev[i])   ordered.push(lukeRev[i])
+      if(vivekRev[i])   ordered.push(vivekRev[i])
     }
     gsap.set(ordered,{yPercent:110})
     gsap.to(ordered,{
       yPercent:0, ease:'power3.out', stagger:{each:0.04,from:'start'},
-      scrollTrigger:{trigger:'#footer-transition',start:'center bottom+=500',end:'bottom bottom',scrub:true}
+      scrollTrigger:{trigger:'#footer-transition',start:'top+=100px bottom',end:'bottom bottom',scrub:true}
     })
   }
 }
