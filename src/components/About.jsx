@@ -19,7 +19,7 @@ I'm naturally curious and always ready to learn, improve and explore new ideas. 
     description: `It all started with curiosity while exploring how websites are built. I began with HTML, CSS and JavaScript, then jumped into mobile app development with Kotlin and Flutter, where I learned the basics and built a few small projects. Later, I returned to web development because I enjoyed its creativity and flexibility even more.
 
 That’s when I started exploring the MERN stack with a strong focus on React, while also learning API integration, backend connectivity, Three.js, MySQL and Python-Django. Currently, I’m continuing my journey with TypeScript, Next.js and PostgreSQL.`,
-    image: '/assets/images/projects/Covers/cyberDiag_web.avif',
+    image: '/assets/images/profile/fsd.png',
     pills: ['MERN Stack', 'Database & APIs', 'Mobile Dev']
   },
   {
@@ -37,7 +37,7 @@ As I kept learning, I started building models for scene understanding, chatbot s
     description: `It all began during the COVID lockdown, when I started expressing my thoughts and emotions through Tamil poems. What started as a simple pastime slowly grew into something I genuinely loved, and over time, I’ve written nearly 30 poems on different themes and emotions. I also won an on-spot Tamil poetry competition during my college days, which made the journey even more special.
 
 At the same time, storytelling has always been a part of me since childhood. I love creating stories in my own imaginary worlds and narrating them to friends, juniors, and kids, which continues to keep my creativity and imagination alive.`,
-    image: '/assets/images/projects/Covers/Echo.avif',
+    image: '/assets/images/profile/poet.jpg',
     pills: ['Tamil Poetry', 'Storytelling', 'Imagination']
   },
   {

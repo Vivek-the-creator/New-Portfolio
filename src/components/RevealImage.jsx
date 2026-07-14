@@ -11,7 +11,7 @@ export default function RevealImage() {
         <span className="reveal-corner br" />
       </div>
       <div className="reveal-overlay" id="reveal-overlay" />
-      <p className="reveal-phrase" id="reveal-phrase">Basically, I make websites.</p>
+      <p className="reveal-phrase" id="reveal-phrase">Basically, I build cool stuff.</p>
     </div>
   )
 }
