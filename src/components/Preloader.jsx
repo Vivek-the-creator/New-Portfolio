@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function Preloader() {
   return (
     <>
@@ -12,7 +10,6 @@ export default function Preloader() {
       </div>
       <div className="transition-panel" id="transition-panel">
         <div className="t-panel-dark" id="t-panel-dark" />
-        <div className="t-panel-red" id="t-panel-red" />
         <div className="t-panel-red" id="t-panel-red" />
       </div>
     </>

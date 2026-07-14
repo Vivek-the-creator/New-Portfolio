@@ -92,15 +92,12 @@ export function setupSkills(lenis) {
     isTransitioning = true
     currentStep = step
     const targetScroll = st.start + step * stepPx
-    // Re-enable lenis just for this programmatic scroll, then stop again
     lenis.start()
     lenis.scrollTo(targetScroll, {
       duration: 0.85,
       ease: (t) => 1 - Math.pow(1 - t, 3),
       onComplete: () => {
         isTransitioning = false
-        // Stop lenis again so the next wheel event doesn't drift
-        if (isPinned) lenis.stop()
       }
     })
   }
@@ -168,74 +165,160 @@ export function setupSkills(lenis) {
   }
 }
 
-export function setupScrollTimeline(lenis, skillsPinExtra = 0, certificationsPinExtra = 0) {
+export function setupScrollTimeline(lenis) {
   const timeline = document.getElementById('scroll-timeline')
   const bar      = document.getElementById('st-bar')
   const label    = document.getElementById('st-label')
   const pctEl    = document.getElementById('scroll-pct')
+  if (!timeline || !bar || !label || !pctEl) return
 
   const isMobile = window.innerWidth <= 768
   const sections = [
-    {id:'scroll-wrap',name:'Home'},
-    {id:'about',name:'About Me'},
-    {id:'projects',name:'Projects'},
-    ...(isMobile?[]:[{id:'circle-gallery',name:'Gallery'}]),
-    {id:'skills',name:'Skills'},
-    {id:'certifications',name:'Certificates'},
-    {id:'contact',name:'Contact'},
-  ].filter(s=>document.getElementById(s.id))
+    { id: 'scroll-wrap', name: 'Home' },
+    { id: 'about', name: 'About Me' },
+    { id: 'projects', name: 'Projects' },
+    ...(isMobile ? [] : [{ id: 'circle-gallery', name: 'Gallery' }]),
+    { id: 'skills', name: 'Skills' },
+    { id: 'certifications', name: 'Certificates' },
+    { id: 'internships', name: 'Internships' },
+    { id: 'contact', name: 'Contact' },
+    { id: 'footer-transition', name: 'Footer', scrollId: 'footer-transition' },
+  ].filter(s => document.getElementById(s.id))
 
-  const scrollY0   = window.scrollY||window.pageYOffset
-  const zoneTop    = document.getElementById(sections[0].id).getBoundingClientRect().top+scrollY0
-  const lastEl     = document.getElementById(sections[sections.length-1].id)
-  const zoneBottom = lastEl.getBoundingClientRect().top+lastEl.offsetHeight+scrollY0
+  if (sections.length < 2) return
 
-  const PIN_EXTRA = 2000
-  const aboutEl = document.getElementById('about')
-  const aboutPinExtra = aboutEl ? PIN_EXTRA : 0
+  bar.innerHTML = ''
 
-  const zoneH = (zoneBottom - zoneTop) + aboutPinExtra + skillsPinExtra + certificationsPinExtra
-
-  const segEls = []
-  sections.forEach(sec => {
-    const el = document.getElementById(sec.id)
-    sec.top  = el.getBoundingClientRect().top + scrollY0
-    const effectiveH = el.offsetHeight
-      + (sec.id === 'about'  ? aboutPinExtra  : 0)
-      + (sec.id === 'skills' ? skillsPinExtra : 0)
-      + (sec.id === 'certifications' ? certificationsPinExtra : 0)
-    sec.ratio = effectiveH / zoneH
-    const seg  = document.createElement('div'); seg.className='st-seg'; seg.style.flex=sec.ratio.toFixed(4)
-    const fill = document.createElement('div'); fill.className='st-seg-fill'
-    seg.appendChild(fill); bar.appendChild(seg)
-    seg.addEventListener('click',()=>lenis.scrollTo(document.getElementById(sec.id),{offset:0,duration:1.2}))
-    segEls.push({seg,fill})
+  const segEls = sections.map(sec => {
+    const seg = document.createElement('div')
+    seg.className = 'st-seg'
+    const fill = document.createElement('div')
+    fill.className = 'st-seg-fill'
+    seg.appendChild(fill)
+    bar.appendChild(seg)
+    seg.addEventListener('click', () => {
+      const target = document.getElementById(sec.scrollId || sec.id)
+      if (target) lenis?.scrollTo(target, { offset: 0, duration: 1.15 })
+    })
+    return { seg, fill }
   })
 
+  let zoneTop = 0
+  let zoneBottom = 1
+
+  const getTop = (el) => {
+    return el.getBoundingClientRect().top + (window.scrollY || window.pageYOffset)
+  }
+
+  function getVisibleSectionIndex() {
+    const viewH = window.innerHeight
+    let bestIndex = -1
+    let bestScore = 0
+
+    sections.forEach((sec, index) => {
+      const el = document.getElementById(sec.id)
+      if (!el) return
+      const rect = el.getBoundingClientRect()
+      const visible = Math.min(rect.bottom, viewH) - Math.max(rect.top, 0)
+      if (visible <= 0) return
+
+      const centerDistance = Math.abs((rect.top + rect.bottom) / 2 - viewH * 0.45)
+      const centerScore = Math.max(0, 1 - centerDistance / viewH)
+      const score = visible / viewH + centerScore * 0.35
+      if (score > bestScore) {
+        bestScore = score
+        bestIndex = index
+      }
+    })
+
+    if (bestIndex >= 0) {
+      const galleryIndex = sections.findIndex(sec => sec.id === 'circle-gallery')
+      const projectsIndex = sections.findIndex(sec => sec.id === 'projects')
+      if (bestIndex === galleryIndex && projectsIndex >= 0) {
+        const galleryRect = document.getElementById('circle-gallery')?.getBoundingClientRect()
+        if (galleryRect && galleryRect.top > window.innerHeight * 0.18) return projectsIndex
+      }
+      return bestIndex
+    }
+
+    return -1
+  }
+
+  function recalcSections() {
+    const maxScroll = ScrollTrigger.maxScroll(window)
+    sections.forEach((sec, index) => {
+      const el = document.getElementById(sec.id)
+      sec.top = Math.min(maxScroll, Math.max(0, getTop(el)))
+      const next = sections[index + 1]
+      const nextTop = next ? Math.min(maxScroll, Math.max(0, getTop(document.getElementById(next.id)))) : maxScroll
+      sec.bottom = next ? Math.max(sec.top + 1, nextTop) : maxScroll
+    })
+
+    zoneTop = sections[0].top
+    zoneBottom = Math.max(zoneTop + 1, maxScroll)
+    const zoneH = zoneBottom - zoneTop
+
+    sections.forEach((sec, index) => {
+      const span = Math.max(1, sec.bottom - sec.top)
+      segEls[index].seg.style.flex = (span / zoneH).toFixed(4)
+    })
+  }
+
+  recalcSections()
+  ScrollTrigger.addEventListener('refresh', recalcSections)
+
   ScrollTrigger.create({
-    trigger:'#'+sections[0].id, start:'top bottom',
-    endTrigger:'#'+sections[sections.length-1].id, end:'bottom bottom',
-    onUpdate(self){
-      const progress=self.progress
-      const docH=document.documentElement.scrollHeight-window.innerHeight
-      pctEl.textContent='('+Math.round((window.scrollY/docH)*100)+')'
-      if(progress<=0||progress>=0.90){
-        timeline.classList.remove('visible'); pctEl.classList.remove('visible'); return
+    trigger: '#' + sections[0].id,
+    start: 'top top',
+    end: () => ScrollTrigger.maxScroll(window),
+    onUpdate() {
+      const y = window.scrollY || window.pageYOffset
+      const docH = Math.max(1, document.documentElement.scrollHeight - window.innerHeight)
+      const progress = Math.min(1, Math.max(0, (y - zoneTop) / (zoneBottom - zoneTop)))
+      pctEl.textContent = '(' + Math.round((y / docH) * 100) + ')'
+
+      if (progress <= 0.01 || progress >= 0.985) {
+        timeline.classList.remove('visible')
+        pctEl.classList.remove('visible')
+        return
       }
-      timeline.classList.add('visible'); pctEl.classList.add('visible')
-      let cumul=0, activeIdx=0
-      for(let i=0;i<sections.length;i++){
-        const segEnd=cumul+sections[i].ratio
-        if(progress<segEnd){
-          segEls[i].fill.style.height=(Math.min(1,Math.max(0,(progress-cumul)/sections[i].ratio))*100).toFixed(1)+'%'
-          activeIdx=i
-          for(let j=i+1;j<sections.length;j++) segEls[j].fill.style.height='0%'
-          break
-        } else { segEls[i].fill.style.height='100%' }
-        cumul=segEnd
+
+      timeline.classList.add('visible')
+      pctEl.classList.add('visible')
+
+      let activeIdx = getVisibleSectionIndex()
+      const fillProgressBySection = sections.map(sec =>
+        Math.min(1, Math.max(0, (y - sec.top) / (sec.bottom - sec.top)))
+      )
+
+      sections.forEach((sec, index) => {
+        if (activeIdx < 0 && y >= sec.top - 4 && y < sec.bottom - 4) activeIdx = index
+      })
+
+      if (activeIdx < 0) activeIdx = sections.length - 1
+
+      const projectsIndex = sections.findIndex(sec => sec.id === 'projects')
+      const galleryIndex = sections.findIndex(sec => sec.id === 'circle-gallery')
+      if (projectsIndex >= 0 && galleryIndex >= 0) {
+        const projects = sections[projectsIndex]
+        const gallery = sections[galleryIndex]
+        const afterGallery = sections[galleryIndex + 1]
+        const inProjectsGalleryRange = y >= projects.top && (!afterGallery || y < afterGallery.top)
+        if (inProjectsGalleryRange) {
+          activeIdx = y >= gallery.top - window.innerHeight * 0.12 ? galleryIndex : projectsIndex
+        }
       }
-      label.textContent=sections[activeIdx].name
-      label.style.top=(progress*100).toFixed(1)+'%'
+
+      segEls.forEach(({ fill }, index) => {
+        const fillProgress =
+          index < activeIdx ? 1 :
+          index === activeIdx ? Math.max(0.015, fillProgressBySection[index]) :
+          0
+        fill.style.height = (fillProgress * 100).toFixed(1) + '%'
+      })
+
+      label.textContent = sections[activeIdx].name
+      label.style.top = (progress * 100).toFixed(1) + '%'
     }
   })
 }

@@ -28,7 +28,6 @@ export function isMobileViewport() {
 }
 
 export function runPreloader({ onComplete, startShader }) {
-  const isMobile = navigator.maxTouchPoints > 1
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
   const shouldSkip = !!sessionStorage.getItem('index-return-fade') || prefersReducedMotion
 
@@ -82,7 +81,8 @@ export function runPreloader({ onComplete, startShader }) {
   gsap.set(pLuke,    { opacity: 1 })
   gsap.set(pBaffait, { opacity: 1 })
   gsap.set(allRevealEls, { yPercent: 110 })
-  gsap.set([pContent, tPanelRed, tPanelDark], { willChange: 'transform' })
+  gsap.set([pContent, tPanelRed, tPanelDark], { willChange: 'transform', force3D: true })
+  gsap.set([tPanelRed, tPanelDark], { yPercent: 100, y: 0 })
   gsap.set(pContent, { x: -(getTotalWidth() / 2 - pLuke.offsetWidth / 2) })
 
   if (shouldSkip) {
@@ -99,7 +99,7 @@ export function runPreloader({ onComplete, startShader }) {
     placeIntroNameAtBottom()
     gsap.set(allRevealEls, { yPercent: 0 })
     gsap.set(hero, { opacity: 1 })
-    gsap.set([tPanelRed, tPanelDark], { y: '-100%' })
+    gsap.set([tPanelRed, tPanelDark], { yPercent: -100, y: 0 })
     if (introBg) introBg.style.display = 'none'
     startShader()
     onComplete(_introSettledXvw)
@@ -107,6 +107,7 @@ export function runPreloader({ onComplete, startShader }) {
   }
 
   const master = gsap.timeline({ delay: 0.2 })
+  let finalNameState = null
 
   master
     .add(() => {
@@ -142,7 +143,15 @@ export function runPreloader({ onComplete, startShader }) {
       const baseFontSize = parseFloat(getComputedStyle(pLuke).fontSize)
       const newFontSize  = baseFontSize * scale
 
-      const applyFinalState = () => {
+      finalNameState = { scale, deltaY, newFontSize, vp }
+    })
+    .to(pContent, {
+      scale: () => finalNameState.scale,
+      y: () => `+=${finalNameState.deltaY}`,
+      duration: 0.75,
+      ease: 'power3.inOut',
+      onComplete: () => {
+        const { newFontSize, vp } = finalNameState
         pContent.style.visibility = 'hidden'
         gsap.set(pContent, { scale: 1, x: 0, y: 0 })
         gsap.set(nameLayer, { mixBlendMode: 'difference' })
@@ -151,21 +160,16 @@ export function runPreloader({ onComplete, startShader }) {
         void pContent.offsetWidth
         placeIntroNameAtBottom()
         pContent.style.visibility = 'visible'
-      }
-
-      gsap.to(pContent, {
-        scale, y: `+=${deltaY}`, duration: 0.75, ease: 'power3.inOut',
-        onComplete: () => requestAnimationFrame(applyFinalState),
-      })
+      },
     })
-    .to(tPanelDark, { y: '0%', duration: 0.45, ease: 'power3.inOut' }, '<+=0.05')
-    .to(tPanelRed,  { y: '0%', duration: 0.45, ease: 'power3.inOut' }, '-=0.3')
+    .to(tPanelDark, { yPercent: 0, duration: 0.42, ease: 'power3.inOut' }, '<+=0.05')
+    .to(tPanelRed,  { yPercent: 0, duration: 0.42, ease: 'power3.inOut' }, '-=0.3')
     .set(introBg, { display: 'none' })
     .set(hero, { opacity: 1 })
-    .to(tPanelRed,  { y: '-100%', duration: 0.55, ease: 'power3.inOut' }, '+=0.05')
-    .to(tPanelDark, { y: '-100%', duration: 0.55, ease: 'power3.inOut' }, '-=0.4')
-    .to('#hero-tagline', { opacity: 1, clipPath: 'inset(0 0 0% 0)', duration: 1.1, ease: 'power3.inOut' }, '-=0.2')
-    .to('#hero-bar',     { opacity: 1, clipPath: 'inset(0 0 0% 0)', duration: 1.0, ease: 'power3.inOut' }, '-=0.8')
-    .fromTo('#hero-line', { opacity: 1, scaleX: 0 }, { scaleX: 1, duration: 1.0, ease: 'power3.inOut' }, '<')
-    .add(() => onComplete(_introSettledXvw), '-=0.8')
+    .addLabel('heroReveal')
+    .to([tPanelRed, tPanelDark], { yPercent: -100, duration: 0.58, ease: 'power3.inOut' }, 'heroReveal')
+    .to('#hero-tagline', { opacity: 1, clipPath: 'inset(0 0 0% 0)', duration: 0.85, ease: 'power3.out' }, 'heroReveal+=0.1')
+    .to('#hero-bar',     { opacity: 1, clipPath: 'inset(0 0 0% 0)', duration: 0.8, ease: 'power3.out' }, 'heroReveal+=0.18')
+    .fromTo('#hero-line', { opacity: 1, scaleX: 0 }, { scaleX: 1, duration: 0.8, ease: 'power3.out' }, 'heroReveal+=0.18')
+    .add(() => onComplete(_introSettledXvw))
 }
