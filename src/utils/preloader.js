@@ -33,32 +33,32 @@ export function runPreloader({ onComplete, startShader }) {
 
   const introBg    = document.getElementById('intro-bg')
   const pContent   = document.getElementById('preloader-content')
-  const pLuke      = document.getElementById('preloader-vivek')
-  const pBaffait   = document.getElementById('preloader-kk')
+  const pVivek     = document.getElementById('preloader-vivek')
+  const pKk        = document.getElementById('preloader-kk')
   const tPanelRed  = document.getElementById('t-panel-red')
   const tPanelDark = document.getElementById('t-panel-dark')
   const hero       = document.getElementById('hero')
   const nameLayer  = document.getElementById('name-layer')
 
-  const lukeChars   = splitIntoChars(pLuke)
-  const baffaitChars = splitIntoChars(pBaffait)
-  const allRevealEls = [...lukeChars, ...baffaitChars]
+  const vivekChars   = splitIntoChars(pVivek)
+  const kkChars      = splitIntoChars(pKk)
+  const allRevealEls = [...vivekChars, ...kkChars]
 
   function getCharGap() {
-    return parseFloat(getComputedStyle(pBaffait).fontSize) * 0.15
+    return parseFloat(getComputedStyle(pKk).fontSize) * 0.15
   }
 
   function layoutNames() {
-    const fs = parseFloat(getComputedStyle(pBaffait).fontSize)
+    const fs = parseFloat(getComputedStyle(pKk).fontSize)
     if (!fs) return
     const gapPx = fs * 0.15
-    const baffaitLeftPx = pLuke.offsetLeft + pLuke.offsetWidth + gapPx
-    pBaffait.style.left = (baffaitLeftPx / fs) + 'em'
-    pBaffait.style.top  = '0em'
+    const kkLeftPx = pVivek.offsetLeft + pVivek.offsetWidth + gapPx
+    pKk.style.left = (kkLeftPx / fs) + 'em'
+    pKk.style.top  = '0em'
   }
 
   function getTotalWidth() {
-    return pLuke.offsetWidth + getCharGap() + pBaffait.offsetWidth
+    return pVivek.offsetWidth + getCharGap() + pKk.offsetWidth
   }
 
   let _introSettledXvw = 0
@@ -66,7 +66,7 @@ export function runPreloader({ onComplete, startShader }) {
   function placeIntroNameAtBottom() {
     layoutNames()
     const totalW = getTotalWidth()
-    const offsetX = -(totalW / 2 - pLuke.offsetWidth / 2)
+    const offsetX = -(totalW / 2 - pVivek.offsetWidth / 2)
     const offsetX_vw = (offsetX / getViewportSize().width) * 100
     _introSettledXvw = offsetX_vw
     const newH = pContent.offsetHeight
@@ -78,24 +78,24 @@ export function runPreloader({ onComplete, startShader }) {
   }
 
   layoutNames()
-  gsap.set(pLuke,    { opacity: 1 })
-  gsap.set(pBaffait, { opacity: 1 })
+  gsap.set(pVivek, { opacity: 1 })
+  gsap.set(pKk,    { opacity: 1 })
   gsap.set(allRevealEls, { yPercent: 110 })
   gsap.set([pContent, tPanelRed, tPanelDark], { willChange: 'transform', force3D: true })
   gsap.set([tPanelRed, tPanelDark], { yPercent: 100, y: 0 })
-  gsap.set(pContent, { x: -(getTotalWidth() / 2 - pLuke.offsetWidth / 2) })
+  gsap.set(pContent, { x: -(getTotalWidth() / 2 - pVivek.offsetWidth / 2) })
 
   if (shouldSkip) {
     gsap.set(pContent, { scale: 1, x: 0, y: 0 })
     gsap.set(nameLayer, { mixBlendMode: 'difference' })
     const vp = getViewportSize()
-    const fs = parseFloat(getComputedStyle(pLuke).fontSize)
+    const fs = parseFloat(getComputedStyle(pVivek).fontSize)
     const totalW = getTotalWidth()
     const targetW = vp.width - 240
     const scale = targetW / totalW
     const newFs  = fs * scale
     const vwSize = (newFs / vp.width) * 100
-    ;[pLuke, pBaffait].forEach(el => { el.style.fontSize = `${vwSize}vw` })
+    ;[pVivek, pKk].forEach(el => { el.style.fontSize = `${vwSize}vw` })
     placeIntroNameAtBottom()
     gsap.set(allRevealEls, { yPercent: 0 })
     gsap.set(hero, { opacity: 1 })
@@ -112,7 +112,7 @@ export function runPreloader({ onComplete, startShader }) {
   master
     .add(() => {
       layoutNames()
-      gsap.set(pContent, { x: -(getTotalWidth() / 2 - pLuke.offsetWidth / 2) })
+      gsap.set(pContent, { x: -(getTotalWidth() / 2 - pVivek.offsetWidth / 2) })
     })
     .to(allRevealEls, { yPercent: 0, duration: 0.4, ease: 'power3.out', stagger: { each: 0.025, from: 'center' } })
     .add(() => layoutNames())
@@ -140,7 +140,7 @@ export function runPreloader({ onComplete, startShader }) {
       const curVisualCenterY = contentRect.top + visualCenterY
       const targetVisualCenterY = targetBottom - (pContent.offsetHeight * scale / 2)
       const deltaY = targetVisualCenterY - curVisualCenterY
-      const baseFontSize = parseFloat(getComputedStyle(pLuke).fontSize)
+      const baseFontSize = parseFloat(getComputedStyle(pVivek).fontSize)
       const newFontSize  = baseFontSize * scale
 
       finalNameState = { scale, deltaY, newFontSize, vp }
@@ -156,7 +156,7 @@ export function runPreloader({ onComplete, startShader }) {
         gsap.set(pContent, { scale: 1, x: 0, y: 0 })
         gsap.set(nameLayer, { mixBlendMode: 'difference' })
         const vwSize = (newFontSize / vp.width) * 100
-        ;[pLuke, pBaffait].forEach(el => { el.style.fontSize = `${vwSize}vw` })
+        ;[pVivek, pKk].forEach(el => { el.style.fontSize = `${vwSize}vw` })
         void pContent.offsetWidth
         placeIntroNameAtBottom()
         pContent.style.visibility = 'visible'

@@ -15,8 +15,8 @@ export async function setupScrollReveal(lenisRef, introSettledXvw) {
 
   const pContent  = document.getElementById('preloader-content')
   const pLogo     = document.getElementById('preloader-logo')
-  const pLuke     = document.getElementById('preloader-vivek')
-  const pBaffait  = document.getElementById('preloader-kk')
+  const pVivek    = document.getElementById('preloader-vivek')
+  const pKk       = document.getElementById('preloader-kk')
   const pDot      = null
   const nameLayer = document.getElementById('name-layer')
   const revealWrap = document.getElementById('reveal-image-wrap')
@@ -131,8 +131,8 @@ export async function setupScrollReveal(lenisRef, introSettledXvw) {
   const mobile = window.innerWidth<=768
   const exitL = mobile?'-35vw':'-55vw', exitR = mobile?'35vw':'55vw'
   scrollTl.fromTo(pLogo,    {x:'0vw',opacity:1},{x:exitL,opacity:0,duration:0.7,ease:'none'},0.3)
-  scrollTl.fromTo(pLuke,    {x:'0vw',opacity:1},{x:exitL,opacity:0,duration:0.7,ease:'none'},0.3)
-  scrollTl.fromTo(pBaffait, {x:'0vw',opacity:1},{x:exitR,opacity:0,duration:0.7,ease:'none'},0.3)
+  scrollTl.fromTo(pVivek, {x:'0vw',opacity:1},{x:exitL,opacity:0,duration:0.7,ease:'none'},0.3)
+  scrollTl.fromTo(pKk,    {x:'0vw',opacity:1},{x:exitR,opacity:0,duration:0.7,ease:'none'},0.3)
   scrollTl.set(nameLayer, { autoAlpha:0 }, 0.98)
   scrollTl.to(phraseChars, {
     opacity:1, ...(isMobile?{}:{filter:'blur(0px)'}),

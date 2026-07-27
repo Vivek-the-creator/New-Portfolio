@@ -7,8 +7,7 @@ export default function Hero() {
     <div className="scroll-wrap" id="scroll-wrap">
       <section className="hero" id="hero">
         <h1 className="sr-only">
-          Vivek — Creative Developer, computer science student in Vannes,
-          specialized in web development, animation and interactive design.
+          Vivek — Creative Developer, CSE (AI&ML) student specialized in web development, animation and interactive design.
         </h1>
         <div className="hero-canvas" id="hero-canvas">
           <LiquidEther
